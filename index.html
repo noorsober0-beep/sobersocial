@@ -8,6 +8,12 @@
       name="description"
       content="Sober Social Indore is a warm community for young adults who want cafe-based company without dating apps or nightlife."
     />
+    <script>
+      // Fallback stubs to avoid "can't detect preamble" runtime error
+      // injected by the react-refresh preamble in some dev environments.
+      if (!window.$RefreshReg$) window.$RefreshReg$ = () => {};
+      if (!window.$RefreshSig$) window.$RefreshSig$ = () => (type) => type;
+    </script>
   </head>
   <body class="bg-cream text-espresso">
     <div id="root"></div>
