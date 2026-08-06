@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -20,12 +21,14 @@ export default function Home() {
       <div className="relative mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-6 py-20 text-center sm:px-8">
         <div className="mx-auto mb-12 flex h-[120px] w-[120px] items-center justify-center rounded-full border border-espresso/10 bg-white/90 shadow-soft">
           <div className="relative flex h-full w-full items-center justify-center px-4 py-3">
-            <img
+            <motion.img
               src="/logo-master.png"
               alt="Sober Social Indore logo"
               className={`absolute h-[100px] w-auto object-contain ${logoLoaded && !logoError ? 'block' : 'hidden'}`}
               onLoad={() => setLogoLoaded(true)}
               onError={() => setLogoError(true)}
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
             />
             {!logoLoaded || logoError ? (
               <span className="text-xs uppercase tracking-[0.35em] text-espresso/40">
@@ -35,17 +38,41 @@ export default function Home() {
           </div>
         </div>
 
-        <p className="mx-auto max-w-2xl text-sm uppercase tracking-[0.45em] text-warmbrown">
+        <motion.p
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="mx-auto max-w-2xl text-sm uppercase tracking-[0.45em] text-warmbrown"
+        >
           Your Kind of Social
-        </p>
+        </motion.p>
 
-        <h1 className="mx-auto mt-8 max-w-3xl text-5xl font-serif font-semibold leading-[1.02] tracking-[-0.03em] text-espresso sm:text-6xl fade-in">
+        <motion.h1
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.75, delay: 0.05 }}
+          className="mx-auto mt-8 max-w-3xl text-5xl font-serif font-semibold leading-[1.02] tracking-[-0.03em] text-espresso sm:text-6xl"
+        >
           Coming Soon
-        </h1>
+        </motion.h1>
 
-        <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-espresso/80 sm:text-lg">
-          A gentle way to find company at cafes, without dating apps or nightlife. Something new is brewing in Indore.
-        </p>
+        <motion.p
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.75, delay: 0.2 }}
+          className="mx-auto mt-6 max-w-2xl text-base leading-8 text-espresso/80 sm:text-lg"
+        >
+          Something new is brewing in Indore.
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.75, delay: 0.35 }}
+          className="mx-auto mt-4 max-w-2xl text-sm font-medium uppercase tracking-[0.35em] text-espresso/60"
+        >
+          your kind of social
+        </motion.p>
 
         <div className="mx-auto mt-12 w-full max-w-xl rounded-[2rem] border border-espresso/10 bg-white/90 p-8 shadow-soft">
           <p className="text-sm uppercase tracking-[0.35em] text-warmbrown">
@@ -66,7 +93,7 @@ export default function Home() {
             />
             <button
               type="submit"
-              className="inline-flex h-14 items-center justify-center rounded-full bg-terracotta px-6 text-sm font-semibold text-white transition hover:bg-[#9a4024]"
+              className="inline-flex h-14 items-center justify-center rounded-full bg-terracotta px-6 text-sm font-semibold text-white transition duration-300 ease-out hover:scale-[1.03] hover:bg-[#9a4024] hover:shadow-soft"
             >
               Notify me when we launch
             </button>
