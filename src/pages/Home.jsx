@@ -21,8 +21,8 @@ export default function Home() {
         <div className="mx-auto mb-12 flex h-[120px] w-[120px] items-center justify-center rounded-full border border-espresso/10 bg-white/90 shadow-soft">
           <div className="relative flex h-full w-full items-center justify-center px-4 py-3">
             <img
-              src="/logo.svg"
-              alt="Logo placeholder — replace with actual logo"
+              src="/logo-master.png"
+              alt="Sober Social Indore logo"
               className={`absolute h-[100px] w-auto object-contain ${logoLoaded && !logoError ? 'block' : 'hidden'}`}
               onLoad={() => setLogoLoaded(true)}
               onError={() => setLogoError(true)}
