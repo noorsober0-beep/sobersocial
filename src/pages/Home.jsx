@@ -102,7 +102,7 @@ export default function Home() {
               You're on the list — see you soon.
             </p>
           )}
-        </div>
+        </motion.div>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-3 text-sm text-espresso/70 sm:flex-row">
           <span>Follow us</span>
