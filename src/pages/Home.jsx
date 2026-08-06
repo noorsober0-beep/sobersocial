@@ -38,15 +38,6 @@ export default function Home() {
           </div>
         </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="mx-auto max-w-2xl text-sm uppercase tracking-[0.45em] text-warmbrown"
-        >
-          Your Kind of Social
-        </motion.p>
-
         <motion.h1
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -69,7 +60,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75, delay: 0.35 }}
-          className="mx-auto mt-4 max-w-2xl text-sm font-medium uppercase tracking-[0.35em] text-espresso/60"
+          className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-espresso/60 sm:text-base"
         >
           your kind of social
         </motion.p>
