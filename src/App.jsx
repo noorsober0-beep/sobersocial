@@ -1,4 +1,7 @@
 import Home from './pages/Home';
+import { supabase } from './supabaseClient'
+
+console.log('Supabase client:', supabase)
 
 function App() {
   return (
