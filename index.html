@@ -355,7 +355,7 @@ button, input { font-family: 'Manrope', system-ui, sans-serif; }
 /* Glass material — track vs capsule */
 .track.glass,
 .capsule.glass {
-  position: relative;
+  position: absolute;
   overflow: hidden;
   isolation: isolate;
 }
@@ -1317,11 +1317,31 @@ header.site-header > * { pointer-events: auto; }
       },
       body: JSON.stringify({ email: email })
     }).then(function (res) {
-      if (!res.ok) throw new Error('status ' + res.status);
+      if (res.status === 409) {
+        form.classList.add('success-mode');
+        announce("You're already on the list!");
+        return null;
+      }
+      if (!res.ok) {
+        return res.text().then(function (body) {
+          var msg = 'Something went wrong. Please try again.';
+          if (res.status === 401 || res.status === 403) msg = 'Waitlist is temporarily unavailable.';
+          throw new Error(msg);
+        });
+      }
       form.classList.add('success-mode');
       announce("You're on the list!");
-    }).catch(function () {
-      err.textContent = 'Something went wrong. Please try again.';
+      return null;
+    }).catch(function (e) {
+      if (e && e.message && e.message.indexOf('Something went wrong') === -1 && e.message.indexOf('Waitlist') === 0) {
+        err.textContent = e.message;
+      } else if (e && e.message && e.message.indexOf('Failed to fetch') !== -1) {
+        err.textContent = 'Cannot reach waitlist server. Please try again soon.';
+      } else if (e && e.message && (e.message.indexOf('Waitlist') === 0 || e.message.indexOf('Something') === 0)) {
+        err.textContent = e.message;
+      } else {
+        err.textContent = 'Cannot reach waitlist server. Please try again soon.';
+      }
       btn.disabled = false;
       btn.textContent = 'Claim Early Access';
     });
