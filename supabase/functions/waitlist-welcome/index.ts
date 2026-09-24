@@ -1,0 +1,165 @@
+const FROM = 'Sober Social <hello@sobersocial.in>';
+
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function welcomeHtml(email: string): string {
+  const safeEmail = escapeHtml(email);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <title>You're on the Sober Social early list</title>
+</head>
+<body style="margin:0;padding:0;background-color:#0d0f14;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0d0f14" style="width:100%;background-color:#0d0f14;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#151a24" style="width:100%;max-width:560px;background-color:#151a24;border:1px solid #252d3c;border-radius:20px;">
+          <tr>
+            <td style="padding:40px 32px 14px;">
+              <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:bold;line-height:1.4;letter-spacing:0.18em;text-transform:uppercase;color:#a8b9ff;">SOBER SOCIAL</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 32px 16px;">
+              <h1 style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:30px;font-weight:600;line-height:1.25;letter-spacing:0.01em;color:#f5f7fb;">You're on the early list.</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px 16px;">
+              <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.65;color:#c2c9d6;">Thanks for joining Sober Social. We're building a calmer way to meet — clear minds, real chemistry.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px 16px;">
+              <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.65;color:#c2c9d6;">We'll email <strong style="color:#f5f7fb;font-weight:600;">${safeEmail}</strong> when early access opens. No spam, just the invite.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 32px 40px;">
+              <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="https://sobersocial.in" style="height:44px;v-text-anchor:middle;width:210px;" arcsize="50%" stroke="f" fillcolor="#6d7cff">
+                <w:anchorlock/>
+                <center style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;">Visit sobersocial.in</center>
+              </v:roundrect>
+              <![endif]-->
+              <!--[if !mso]><!-->
+              <a href="https://sobersocial.in" style="display:inline-block;padding:14px 24px;background-color:#6d7cff;border-radius:999px;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;line-height:16px;text-decoration:none;letter-spacing:0.01em;">Visit sobersocial.in</a>
+              <!--<![endif]-->
+            </td>
+          </tr>
+          <tr>
+            <td style="height:2px;padding:0 32px;font-size:0;line-height:0;background-color:#151a24;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                <tr>
+                  <td width="42%" height="2" style="height:2px;background-color:#8fa8ff;font-size:0;line-height:0;">&nbsp;</td>
+                  <td width="30%" height="2" style="height:2px;background-color:#e99abf;font-size:0;line-height:0;">&nbsp;</td>
+                  <td width="28%" height="2" style="height:2px;background-color:#b6e57a;font-size:0;line-height:0;">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <p style="margin:0;padding-top:20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:#697386;">Sober Social · Early Access</p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+function corsHeaders(): HeadersInit {
+  return {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json',
+  };
+}
+
+Deno.serve(async (request) => {
+  if (request.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders() });
+  }
+
+  if (request.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: corsHeaders(),
+    });
+  }
+
+  const apiKey = Deno.env.get('RESEND_API_KEY');
+  if (!apiKey) {
+    return new Response(JSON.stringify({ error: 'Missing RESEND_API_KEY' }), {
+      status: 500,
+      headers: corsHeaders(),
+    });
+  }
+
+  let body: { email?: unknown };
+  try {
+    body = await request.json();
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
+      status: 400,
+      headers: corsHeaders(),
+    });
+  }
+
+  const email = String(body.email || '').trim().toLowerCase();
+  if (!isValidEmail(email)) {
+    return new Response(JSON.stringify({ error: 'Invalid email' }), {
+      status: 400,
+      headers: corsHeaders(),
+    });
+  }
+
+  const text =
+    `You're on the early list.\n\n` +
+    `Thanks for joining Sober Social. We're building a calmer way to meet — clear minds, real chemistry.\n\n` +
+    `We'll email ${email} when early access opens. No spam, just the invite.\n\n` +
+    `https://sobersocial.in\n\n— Sober Social`;
+
+  const resendResponse = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: FROM,
+      to: [email],
+      subject: "You're on the Sober Social early list",
+      html: welcomeHtml(email),
+      text,
+    }),
+  });
+
+  const payload = await resendResponse.json().catch(() => ({}));
+  if (!resendResponse.ok) {
+    return new Response(JSON.stringify({ error: 'Resend failed', details: payload }), {
+      status: 502,
+      headers: corsHeaders(),
+    });
+  }
+
+  return new Response(JSON.stringify({ ok: true, id: payload.id || null }), {
+    status: 200,
+    headers: corsHeaders(),
+  });
+});
