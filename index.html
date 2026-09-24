@@ -237,7 +237,7 @@
       width: 100%;
       z-index: 30;
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: 1fr auto;
       align-items: center;
       gap: 0;
       padding: calc(58px + env(safe-area-inset-top)) 40px 40px;
@@ -245,29 +245,10 @@
       pointer-events: none;
     }
 
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: auto;
-      height: 24px;
-      pointer-events: auto;
-      color: #fff;
-      text-decoration: none;
-    }
-
-    .brand svg {
-      width: auto;
-      height: 24px;
-      display: block;
-      filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.18));
-    }
-
     .meta {
       display: flex;
       align-items: center;
       gap: clamp(28px, 3vw, 44px);
-      margin-left: clamp(48px, 5vw, 70px);
       font-size: 18px;
       line-height: 1.2;
       letter-spacing: -0.04em;
@@ -481,6 +462,75 @@
       box-shadow: 0 5px 16px rgba(4, 24, 43, 0.16);
     }
 
+    .control-btn.vip-trigger {
+      position: relative;
+      overflow: visible;
+    }
+
+    .control-btn.vip-trigger:hover,
+    .control-btn.vip-trigger:focus-visible,
+    .stage.vip-engaged .control-btn.vip-trigger {
+      color: #fff;
+      text-shadow: 0 0 16px rgba(190, 239, 255, 0.9);
+    }
+
+    .stage.vip-engaged .capsule {
+      box-shadow:
+        0 11px 28px rgb(4 24 43 / 0.17),
+        0 0 28px rgba(145, 226, 255, 0.48),
+        inset 1px 1px 0 rgb(255 255 255 / 0.72),
+        inset -1px -1px 0 rgb(20 49 73 / 0.18),
+        inset 0 0 18px rgba(255, 255, 255, 0.12);
+      animation: vip-pulse 1800ms ease-in-out infinite;
+    }
+
+    .vip-prompt {
+      position: absolute;
+      top: calc(100% + 18px);
+      left: 80%;
+      z-index: 4;
+      width: max-content;
+      max-width: min(270px, calc(100vw - 48px));
+      padding: 10px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      border-radius: 999px;
+      color: rgba(255, 255, 255, 0.96);
+      background: rgba(18, 39, 56, 0.62);
+      backdrop-filter: blur(14px) saturate(135%);
+      -webkit-backdrop-filter: blur(14px) saturate(135%);
+      box-shadow: 0 12px 30px rgba(4, 24, 43, 0.24), 0 0 24px rgba(127, 227, 255, 0.16);
+      font-size: 12px;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      transform: translate(-50%, -8px) scale(0.94);
+      pointer-events: none;
+      transition: opacity 360ms var(--retake-ease), transform 520ms var(--retake-ease);
+    }
+
+    .vip-prompt::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      width: 9px;
+      height: 9px;
+      background: rgba(18, 39, 56, 0.8);
+      border-top: 1px solid rgba(255, 255, 255, 0.34);
+      border-left: 1px solid rgba(255, 255, 255, 0.34);
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    .stage.vip-engaged .vip-prompt {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+
+    @keyframes vip-pulse {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.12); }
+    }
+
     .stage.is-hidden .track {
       opacity: 0;
     }
@@ -569,20 +619,10 @@
         padding-right: 18px;
       }
 
-      .brand svg {
-        height: 21px;
-      }
-
       .meta {
         min-width: 0;
-        overflow: hidden;
-        margin-left: 12px;
         gap: 12px;
         font-size: 12px;
-      }
-
-      .meta .launch-label {
-        display: none;
       }
 
       .meta span {
@@ -659,6 +699,13 @@
         pointer-events: none;
       }
 
+      .vip-prompt {
+        top: calc(100% + 10px);
+        left: 75%;
+        max-width: calc(100vw - 48px);
+        text-align: center;
+      }
+
       .control-btn.active {
         color: #fff;
         background: rgba(246, 251, 255, 0.2);
@@ -727,22 +774,14 @@
         <button class="cell control-btn" type="button" data-scene="vibeCheck">Vibe Check</button>
         <button class="cell control-btn" type="button" data-scene="smartMatch">Smart Match</button>
         <button class="cell control-btn" type="button" data-scene="realConnections">Real Connections</button>
-        <button class="cell control-btn" type="button" data-scene="vipAccess">VIP Access</button>
+        <button class="cell control-btn vip-trigger" type="button" data-scene="vipAccess" aria-describedby="vip-prompt">VIP Access</button>
       </div>
+      <div class="vip-prompt" id="vip-prompt" role="status">Join waiting list for early access</div>
     </div>
 
     <header class="header">
-      <a href="#" class="brand" aria-label="Home">
-        <svg viewBox="0 0 75 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M6 8.5h25l-7.2 12.3v5.7h-2.6v-5.7L14 8.5H6Z" fill="rgba(255,255,255,.16)" stroke="white" stroke-opacity=".82" stroke-width="1.4" stroke-linejoin="round"/>
-          <path d="M44 8.5h25l-7.2 12.3v5.7h-2.6v-5.7L52 8.5h-8Z" fill="rgba(255,255,255,.16)" stroke="white" stroke-opacity=".82" stroke-width="1.4" stroke-linejoin="round"/>
-          <path d="M31 14.5h13" fill="none" stroke="white" stroke-opacity=".62" stroke-width="1.4"/>
-          <path d="M4 27.5h27M44 27.5h27" stroke="white" stroke-opacity=".58" stroke-width="2.4" stroke-linecap="round"/>
-        </svg>
-      </a>
       <div class="meta" aria-label="Brand metadata">
         <span>Dating Reimagined</span>
-        <span class="launch-label">Early Access Launch</span>
       </div>
       <button type="button" class="join-btn" id="join-waitlist">Join Waitlist</button>
     </header>
@@ -765,6 +804,9 @@
       var capsule = document.getElementById('capsule');
       var labelButtons = Array.prototype.slice.call(document.querySelectorAll('.control-btn'));
       var mediaEls = Array.prototype.slice.call(document.querySelectorAll('.media'));
+      var vipButton = document.querySelector('[data-scene="vipAccess"]');
+      var vipPrompt = document.getElementById('vip-prompt');
+      var vipPinned = false;
 
       var sceneMeta = {
         base: { name: 'base', visibleId: 'video-1', forwardId: null, reverseId: null, duration: 0 },
@@ -808,6 +850,14 @@
         }
       }
 
+      function setVipEngaged(engaged) {
+        stage.classList.toggle('vip-engaged', engaged);
+        if (vipPrompt) {
+          vipPrompt.style.opacity = engaged ? '1' : '0';
+          vipPrompt.style.transform = engaged ? 'translate(-50%, 0) scale(1)' : 'translate(-50%, -8px) scale(.94)';
+        }
+      }
+
       function setVisibleVideo(videoId) {
         mediaEls.forEach(function (videoEl) {
           var isVisible = videoEl.id === videoId;
@@ -847,6 +897,7 @@
           var button = buttonByScene[sceneKey];
           button.classList.toggle('active', !!targetScene && sceneKey === targetScene);
         });
+        setVipEngaged(targetScene === 'vipAccess' || vipPinned);
       }
 
       function updateStaticLabelState() {
@@ -1016,14 +1067,32 @@
         if (!state.selectedScene) {
           stage.classList.remove('is-hovering');
         }
+        if (!vipPinned) {
+          setVipEngaged(false);
+        }
       });
 
       labelButtons.forEach(function (button) {
         button.addEventListener('click', function () {
           var sceneKey = button.dataset.scene;
+          vipPinned = sceneKey === 'vipAccess';
           beginTransition(sceneKey);
         });
       });
+
+      if (vipButton) {
+        vipButton.addEventListener('pointerenter', function () {
+          setVipEngaged(true);
+        });
+        vipButton.addEventListener('focus', function () {
+          setVipEngaged(true);
+        });
+        vipButton.addEventListener('blur', function () {
+          if (!vipPinned) {
+            setVipEngaged(false);
+          }
+        });
+      }
 
       joinButton.addEventListener('click', function () {
         emailInput.focus();
