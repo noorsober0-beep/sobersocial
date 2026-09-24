@@ -2,8 +2,1195 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sober Social</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Unlock a New World of Connection — Dating Reimagined</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --retake-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --retake-slow-ease: cubic-bezier(0.65, 0, 0.35, 1);
+      --glass-x: 24%;
+      --glass-y: 8%;
+      --cap-left: -5px;
+      --cap-width: calc(20% + 5px);
+      --track-left: 0px;
+      --track-width: 100%;
+      --control-opacity: 1;
+      --text: #fff;
+      --bg: #000;
+      --header-x: 0px;
+      --header-y: 0px;
+      --panel: rgba(246, 251, 255, 0.24);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: #000;
+      color: #fff;
+      font-family: 'Manrope', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    :focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 3px;
+    }
+
+    a, button, input {
+      font: inherit;
+    }
+
+    .stage {
+      position: relative;
+      isolation: isolate;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background: #000;
+      z-index: 0;
+    }
+
+    .media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 0;
+      pointer-events: none;
+      visibility: hidden;
+      background: #000;
+    }
+
+    .media.visible {
+      visibility: visible;
+    }
+
+    .hero {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .title {
+      position: absolute;
+      top: 32.9%;
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+      transform: translateX(-50%);
+      width: min(901px, calc(100vw - 48px));
+      font-size: clamp(52px, 6vw, 88px);
+      font-weight: 500;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      text-align: center;
+      white-space: nowrap;
+      text-shadow: 0 2px 12px rgb(0 0 0 / 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      color: #fff;
+      pointer-events: none;
+    }
+
+    .title span {
+      display: inline-block;
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+      transition: opacity 900ms var(--retake-ease), filter 900ms var(--retake-ease), transform 900ms var(--retake-ease);
+    }
+
+    .title span:nth-child(1) { transition-delay: 0ms; }
+    .title span:nth-child(2) { transition-delay: 90ms; }
+    .title span:nth-child(3) { transition-delay: 180ms; }
+    .title span:nth-child(4) { transition-delay: 270ms; }
+    .title span:nth-child(5) { transition-delay: 360ms; }
+    .title span:nth-child(6) { transition-delay: 450ms; }
+
+    .stage.title-hidden .title span {
+      opacity: 0;
+      filter: blur(12px);
+      transform: translateY(-10px);
+    }
+
+    .hero-copy {
+      position: absolute;
+      top: calc(44.78% + 94px);
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+      transform: translateX(-50%);
+      width: min(734px, calc(100vw - 48px));
+      font-size: clamp(14px, 1.25vw, 18px);
+      line-height: 1.2;
+      letter-spacing: -0.04em;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 1px 8px rgb(0 0 0 / 0.16);
+      pointer-events: none;
+    }
+
+    .waitlist-form {
+      position: absolute;
+      top: calc(44.78% + 150px);
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+      transform: translateX(-50%);
+      width: min(610px, calc(100vw - 48px));
+      display: flex;
+      gap: 10px;
+      padding: 14px 14px 14px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(14px) saturate(130%) contrast(110%);
+      -webkit-backdrop-filter: blur(14px) saturate(130%) contrast(110%);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+      pointer-events: auto;
+      z-index: 12;
+      transition: opacity 260ms ease, transform 260ms ease, border-color 260ms ease, background 260ms ease;
+    }
+
+    .waitlist-form.success {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(160, 255, 210, 0.7);
+    }
+
+    .waitlist-form input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: 0;
+      color: #fff;
+      font-size: 16px;
+      line-height: 1.2;
+      padding: 8px 0;
+      outline: none;
+    }
+
+    .waitlist-form input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .waitlist-form button {
+      border: 0;
+      background: rgba(255, 255, 255, 0.11);
+      color: #fff;
+      border-radius: 999px;
+      padding: 0 18px;
+      height: 42px;
+      min-width: 175px;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      cursor: pointer;
+      transition: background 300ms ease, transform 300ms ease, opacity 300ms ease;
+    }
+
+    .waitlist-form button:hover,
+    .waitlist-form button:focus-visible {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .waitlist-form button:active {
+      transform: translateY(1px);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0;
+      padding: calc(58px + env(safe-area-inset-top)) 40px 40px;
+      text-shadow: 0 1px 6px rgb(0 0 0 / 0.18);
+      pointer-events: none;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      height: 24px;
+      pointer-events: auto;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .brand svg {
+      width: auto;
+      height: 24px;
+      display: block;
+      filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.18));
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: clamp(28px, 3vw, 44px);
+      margin-left: clamp(48px, 5vw, 70px);
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+    }
+
+    .meta span {
+      display: inline-block;
+      opacity: 1;
+    }
+
+    .join-btn {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 152px;
+      height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgb(255 255 255 / 0.75);
+      background: transparent;
+      color: #fff;
+      font-size: 18px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      cursor: pointer;
+      transition: background 300ms ease, border-color 300ms ease, color 300ms ease, transform 300ms ease;
+    }
+
+    .join-btn:hover,
+    .join-btn:focus-visible {
+      background: #fff;
+      color: #0b1a26;
+      border-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .controller {
+      position: absolute;
+      top: 46.78%;
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+      transform: translateX(-50%);
+      width: min(880px, calc(100vw - 48px));
+      height: 72px;
+      z-index: 20;
+      --glass-x: 24%;
+      --glass-y: 8%;
+      --cap-left: -5px;
+      --cap-width: calc(20% + 5px);
+      pointer-events: none;
+    }
+
+    .controller .track,
+    .controller .capsule {
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    .track {
+      position: absolute;
+      top: 4px;
+      left: 0;
+      width: 100%;
+      height: 64px;
+      border-radius: 999px;
+      pointer-events: none;
+      background: rgb(24 55 82 / 0.31);
+      border: 1px solid rgb(255 255 255 / 0.2);
+      backdrop-filter: blur(9px) saturate(126%) contrast(108%) brightness(103%);
+      -webkit-backdrop-filter: blur(9px) saturate(126%) contrast(108%) brightness(103%);
+      box-shadow:
+        0 14px 38px rgb(4 24 43 / 0.16),
+        0 2px 7px rgb(4 24 43 / 0.1),
+        inset 1px 1px 0 rgb(255 255 255 / 0.48),
+        inset -1px -1px 0 rgb(21 49 73 / 0.14),
+        inset 0 0 0 0.5px rgb(255 255 255 / 0.16);
+      transition: left 980ms var(--retake-slow-ease), width 980ms var(--retake-slow-ease), opacity 400ms linear 650ms;
+    }
+
+    .track::before,
+    .track::after,
+    .capsule::before,
+    .capsule::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .track::before,
+    .capsule::before {
+      background:
+        radial-gradient(120% 150% at var(--glass-x, 24%) var(--glass-y, 8%), rgb(255 255 255 / 0.25), rgb(255 255 255 / 0) 53%),
+        linear-gradient(115deg, rgb(255 255 255 / 0.10), rgb(255 255 255 / 0) 42%);
+      opacity: 1;
+    }
+
+    .track::after,
+    .capsule::after {
+      padding: 1px;
+      background: conic-gradient(from 225deg, #7fe3ff, rgb(255 255 255 / 0.35), #ffffff, #ffd7e6, rgb(255 255 255 / 0.35), #7fe3ff);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.27;
+    }
+
+    .capsule {
+      top: -1px;
+      left: var(--cap-left);
+      width: var(--cap-width);
+      height: 72px;
+      background: rgb(246 251 255 / 0.24);
+      border: 1px solid rgb(255 255 255 / 0.28);
+      backdrop-filter: blur(13px) saturate(128%) contrast(107%) brightness(105%);
+      -webkit-backdrop-filter: blur(13px) saturate(128%) contrast(107%) brightness(105%);
+      box-shadow:
+        0 11px 28px rgb(4 24 43 / 0.17),
+        0 2px 6px rgb(4 24 43 / 0.1),
+        inset 1px 1px 0 rgb(255 255 255 / 0.62),
+        inset -1px -1px 0 rgb(20 49 73 / 0.18),
+        inset 0 0 12px rgb(255 255 255 / 0.055);
+      transition: left 620ms var(--retake-ease), width 620ms var(--retake-ease), background 620ms var(--retake-ease), opacity 420ms var(--retake-ease), transform 980ms var(--retake-slow-ease);
+      pointer-events: none;
+      will-change: left, width, transform;
+    }
+
+    .capsule::after {
+      opacity: 0.30;
+    }
+
+    .cells {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      pointer-events: auto;
+      z-index: 2;
+    }
+
+    .cell {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 0 14px;
+      font-size: 21px;
+      line-height: 1.2;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.96);
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1) translateY(0);
+      transition: opacity 420ms var(--retake-ease), filter 420ms var(--retake-ease), transform 980ms var(--retake-slow-ease), text-shadow 420ms ease;
+    }
+
+    .static-label {
+      opacity: 1;
+      pointer-events: none;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .control-btn {
+      background: transparent;
+      border: 0;
+      border-radius: 999px;
+      cursor: pointer;
+      color: inherit;
+      font-weight: 400;
+      transition: opacity 420ms var(--retake-ease), filter 420ms var(--retake-ease), transform 980ms var(--retake-slow-ease), background 420ms ease, color 420ms ease, text-decoration-color 420ms ease;
+    }
+
+    .control-btn:hover,
+    .control-btn:focus-visible {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .control-btn.reset {
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+      text-decoration-color: rgba(255, 255, 255, 0.8);
+      opacity: 1;
+    }
+
+    .stage.is-hovering .static-label,
+    .stage.is-selected .static-label {
+      opacity: 0.5;
+      transition-duration: 300ms;
+    }
+
+    .stage.is-transitioning .cell,
+    .stage.is-resetting .cell,
+    .stage.is-working .cell {
+      opacity: 0;
+      filter: blur(10px);
+      transform: scale(0.94);
+      pointer-events: none;
+    }
+
+    .stage.is-transitioning .control-btn.reset {
+      opacity: 1;
+      filter: blur(0);
+      transform: translate(0, 0) scale(1);
+    }
+
+    .stage.is-selected .cell:not(.static-label) {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    .stage.is-selected .control-btn.reset {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1);
+      transition: opacity 520ms var(--retake-ease), filter 520ms var(--retake-ease), transform 520ms var(--retake-ease);
+    }
+
+    .stage.is-hidden .track {
+      opacity: 0;
+    }
+
+    .stage.is-collapsing .track {
+      left: calc(50% - 96px);
+      width: 192px;
+      transition-duration: 980ms;
+    }
+
+    .stage.is-collapsing .capsule {
+      left: calc(50% - 100px);
+      width: 200px;
+      background: rgb(246 251 255 / 0.14);
+      transition-duration: 980ms;
+    }
+
+    .stage.is-resetting .track {
+      opacity: 1;
+      transition-delay: 0ms;
+    }
+
+    .status,
+    .notice {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 240ms ease;
+    }
+
+    .status {
+      top: 120px;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .notice {
+      bottom: 42px;
+      font-size: 12px;
+      letter-spacing: -0.02em;
+      color: rgba(255, 255, 255, 0.82);
+      background: rgba(17, 35, 49, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 999px;
+      padding: 10px 16px;
+      width: auto;
+    }
+
+    .stage.is-visible-status .status,
+    .stage.is-visible-notice .notice {
+      opacity: 1;
+    }
+
+    @media (max-width: 900px) {
+      .header {
+        padding: calc(24px + env(safe-area-inset-top)) 24px 24px;
+      }
+
+      .meta {
+        margin-left: 34px;
+        gap: 22px;
+        font-size: 14px;
+      }
+
+      .join-btn {
+        width: 116px;
+        height: 36px;
+        font-size: 14px;
+      }
+
+      .cell {
+        font-size: clamp(16px, 2.2vw, 22px);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .header {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .brand svg {
+        height: 21px;
+      }
+
+      .meta {
+        gap: 12px;
+        font-size: 12px;
+      }
+
+      .meta .launch-label {
+        display: none;
+      }
+
+      .join-btn {
+        width: 92px;
+        height: 34px;
+        font-size: 13px;
+      }
+
+      .title {
+        top: 32%;
+        width: calc(100vw - 40px);
+        font-size: clamp(42px, 12vw, 58px);
+        white-space: normal;
+      }
+
+      .hero-copy {
+        top: 75%;
+        width: calc(100vw - 44px);
+        font-size: 14px;
+      }
+
+      .waitlist-form {
+        top: calc(75% + 38px);
+        width: calc(100vw - 40px);
+        flex-direction: column;
+        border-radius: 24px;
+        padding: 12px 12px 12px 14px;
+      }
+
+      .waitlist-form button {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .controller {
+        top: 53%;
+        width: calc(100vw - 40px);
+        height: 156px;
+      }
+
+      .track {
+        top: 0;
+        height: 156px;
+        border-radius: 28px;
+      }
+
+      .cells {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: 48px 54px 54px;
+      }
+
+      .static-label {
+        grid-column: 1 / -1;
+      }
+
+      .cell {
+        font-size: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .cell:not(.static-label):nth-child(2),
+      .cell:not(.static-label):nth-child(3) {
+        border-top: 0;
+      }
+
+      .controller .capsule {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .stage.is-collapsing .capsule,
+      .stage.is-selected .capsule,
+      .stage.is-resetting .capsule {
+        opacity: 1;
+        left: 50%;
+        top: 4vh;
+        top: 4dvh;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        width: 196px;
+        height: 64px;
+        border-radius: 999px;
+        background: rgb(246 251 255 / 0.18);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+        scroll-behavior: auto !important;
+        filter: none !important;
+      }
+    }
+  </style>
 </head>
-<body></body>
+<body>
+  <div class="stage title-hidden" id="stage">
+    <video class="media visible" id="video-1" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-1.mp4"></video>
+    <video class="media" id="video-1-reverse" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-1-reverse.mp4"></video>
+    <video class="media" id="video-2" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-2.mp4"></video>
+    <video class="media" id="video-2-reverse" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-2-reverse.mp4"></video>
+    <video class="media" id="video-3" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-3.mp4"></video>
+    <video class="media" id="video-3-reverse" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-3-reverse.mp4"></video>
+    <video class="media" id="video-4" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-4.mp4"></video>
+    <video class="media" id="video-4-reverse" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-4-reverse.mp4"></video>
+
+    <div class="hero">
+      <h1 class="title" aria-label="Unlock a New World of Connection.">
+        <span>Unlock</span>
+        <span>a</span>
+        <span>New</span>
+        <span>World</span>
+        <span>of</span>
+        <span>Connection.</span>
+      </h1>
+      <p class="hero-copy">Dating is broken. We’re rebuilding it from the chemistry up. Get early access before the crowd.</p>
+      <form class="waitlist-form" id="waitlist-form" novalidate>
+        <label class="sr-only" for="email-input">Email address</label>
+        <input id="email-input" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Enter your email" required>
+        <button type="submit">Claim Early Access</button>
+      </form>
+    </div>
+
+    <div class="controller glass" id="controller" aria-label="Feature state controller" role="group">
+      <div class="track"></div>
+      <div class="capsule" id="capsule"></div>
+      <div class="cells" aria-hidden="false">
+        <div class="cell static-label">Select state →</div>
+        <button class="cell control-btn" type="button" data-scene="vibeCheck">Vibe Check</button>
+        <button class="cell control-btn" type="button" data-scene="smartMatch">Smart Match</button>
+        <button class="cell control-btn" type="button" data-scene="realConnections">Real Connections</button>
+        <button class="cell control-btn" type="button" data-scene="vipAccess">VIP Access</button>
+      </div>
+    </div>
+
+    <header class="header">
+      <a href="#" class="brand" aria-label="Home">
+        <svg viewBox="0 0 75 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M11.4 18.3c-2.5-1.9-4.1-4.9-4.1-8.2C7.3 7 10.1 4 14 4c3.7 0 5.8 1.9 6.5 4 1.4-1.8 3.9-3 6.8-3 4.5 0 8 3.1 8 8 0 1.8-.7 3.4-1.7 4.7l-1.8 1.9c-1.9 2.1-4.6 3.5-7.7 3.5-2.6 0-4.9-.9-6.6-2.4l-1.5-1.6c-.6-.7-1.5-1.4-2.5-1.9zm8.7-6.7c-.4 1.1-.6 2.3-.6 3.5 0 2.1.7 4.3 2.4 5.7 1.2 1 2.8 1.5 4.5 1.5 2.8 0 5.3-1.6 6.5-4.1l.9-.7c.5-.4.8-1.1.8-1.8 0-1.5-1.2-2.7-2.8-2.7-1.2 0-2.1.7-2.9 1.5-.8.9-1.7 1.4-3 1.4-1.6 0-2.9-1.1-3.6-2.3zm-8.4 8.8c-1.3-1.1-2.1-2.7-2.1-4.4 0-2.3 1.5-4.4 3.9-5.2.5.9 1.4 1.6 2.5 2.1.9.4 1.9.6 3 .6l-1.8 1.6c-1.5 1.4-3.2 2.6-5.5 3.3zM56.5 11.8c0-2.2 1.9-4.1 4.1-4.1 2.3 0 4.2 1.9 4.2 4.1 0 2.2-1.9 4-4.2 4-2.2 0-4.1-1.8-4.1-4zm-9.2 0c0-2.2 1.9-4.1 4.1-4.1 2.2 0 4.1 1.9 4.1 4.1 0 2.2-1.9 4-4.1 4-2.2 0-4.1-1.8-4.1-4zM31.2 5.7c-4.2 0-7.7 3.4-7.7 7.6 0 4.2 3.5 7.6 7.7 7.6 4.2 0 7.7-3.4 7.7-7.6 0-4.2-3.5-7.6-7.7-7.6zm0 4.2c1.9 0 3.5 1.6 3.5 3.4 0 1.8-1.6 3.4-3.5 3.4s-3.5-1.6-3.5-3.4c0-1.8 1.6-3.4 3.5-3.4z" fill="white"/>
+          <path d="M6.6 24.2c2.2-3.6 6.3-5.5 11.2-5.5 5.1 0 9.1 2.2 11.5 5.9l-2.5 1.7c-1.8-2.7-4.8-4.1-9-4.1s-7.5 1.6-9.5 4.5l-1.7-1.5z" fill="white" opacity="0.75"/>
+        </svg>
+      </a>
+      <div class="meta" aria-label="Brand metadata">
+        <span>Dating Reimagined</span>
+        <span class="launch-label">Early Access Launch</span>
+      </div>
+      <button type="button" class="join-btn" id="join-waitlist">Join Waitlist</button>
+    </header>
+
+    <div class="status" id="status" aria-live="polite">Ready</div>
+    <div class="notice" id="notice" aria-live="polite">A new era of connection is opening.</div>
+    <div class="sr-only" id="live-region" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <script>
+    (function () {
+      var stage = document.getElementById('stage');
+      var waitlistForm = document.getElementById('waitlist-form');
+      var emailInput = document.getElementById('email-input');
+      var joinButton = document.getElementById('join-waitlist');
+      var status = document.getElementById('status');
+      var notice = document.getElementById('notice');
+      var liveRegion = document.getElementById('live-region');
+      var controller = document.getElementById('controller');
+      var capsule = document.getElementById('capsule');
+      var labelButtons = Array.prototype.slice.call(document.querySelectorAll('.control-btn'));
+      var mediaEls = Array.prototype.slice.call(document.querySelectorAll('.media'));
+
+      var sceneMeta = {
+        base: { name: 'base', visibleId: 'video-1', forwardId: null, reverseId: null, duration: 0 },
+        vibeCheck: { name: 'vibeCheck', visibleId: 'video-2', forwardId: 'video-2', reverseId: 'video-2-reverse', duration: 2.08, terminalHold: 0.08, reverseHold: 0.18 },
+        smartMatch: { name: 'smartMatch', visibleId: 'video-3', forwardId: 'video-3', reverseId: 'video-3-reverse', duration: 2.08, terminalHold: 0.08, reverseHold: 0.08 },
+        realConnections: { name: 'realConnections', visibleId: 'video-1', forwardId: 'video-1', reverseId: 'video-1-reverse', duration: 2.08, terminalHold: 0.08, reverseHold: 0.08 },
+        vipAccess: { name: 'vipAccess', visibleId: 'video-4', forwardId: 'video-4', reverseId: 'video-4-reverse', duration: 3, terminalHold: 0.08, reverseHold: 0.08 }
+      };
+
+      var state = {
+        scene: 'base',
+        playback: 'loading',
+        direction: 'forward',
+        locked: false,
+        selectedScene: null,
+        activeVideo: 'video-1',
+        pendingTarget: null,
+        pendingIsBase: false
+      };
+
+      var buttonByScene = {};
+      labelButtons.forEach(function (button) {
+        buttonByScene[button.dataset.scene] = button;
+      });
+
+      function announce(message) {
+        if (!liveRegion) return;
+        liveRegion.textContent = message;
+      }
+
+      function setNotice(message) {
+        if (notice) {
+          notice.textContent = message;
+        }
+      }
+
+      function setStatus(message) {
+        if (status) {
+          status.textContent = message;
+        }
+      }
+
+      function setVisibleVideo(videoId) {
+        mediaEls.forEach(function (videoEl) {
+          var isVisible = videoEl.id === videoId;
+          videoEl.classList.toggle('visible', isVisible);
+          if (isVisible) {
+            videoEl.style.visibility = 'visible';
+          } else {
+            videoEl.style.visibility = 'hidden';
+          }
+        });
+      }
+
+      function getVideoById(id) {
+        return document.getElementById(id);
+      }
+
+      function pauseAllBut(id) {
+        mediaEls.forEach(function (videoEl) {
+          if (videoEl.id !== id) {
+            videoEl.pause();
+          }
+        });
+      }
+
+      function applyCapsulePosition(left, width) {
+        capsule.style.setProperty('--cap-left', left);
+        capsule.style.setProperty('--cap-width', width);
+      }
+
+      function resetTrackPosition() {
+        capsule.style.setProperty('--cap-left', '-5px');
+        capsule.style.setProperty('--cap-width', 'calc(20% + 5px)');
+      }
+
+      function updateControllerSelection(targetScene) {
+        Object.keys(buttonByScene).forEach(function (sceneKey) {
+          var button = buttonByScene[sceneKey];
+          var isCurrent = targetScene && sceneKey === targetScene;
+          if (button.textContent === 'Reset') {
+            button.textContent = sceneMeta[sceneKey].label || sceneKey;
+          }
+          button.classList.toggle('reset', isCurrent && state.scene === sceneKey);
+          if (isCurrent && state.scene === sceneKey) {
+            button.textContent = 'Reset';
+          }
+        });
+      }
+
+      function updateStaticLabelState() {
+        var selected = state.selectedScene && state.scene === state.selectedScene;
+        stage.classList.toggle('is-selected', !!selected);
+        stage.classList.toggle('is-hovering', false);
+      }
+
+      function setTitleHidden(hidden) {
+        stage.classList.toggle('title-hidden', !!hidden);
+      }
+
+      function setupInitialBaseVideo() {
+        var baseVideo = getVideoById('video-1');
+        if (!baseVideo) return;
+        baseVideo.muted = true;
+        baseVideo.playsInline = true;
+        baseVideo.setAttribute('playsinline', 'true');
+        baseVideo.pause();
+        baseVideo.currentTime = 0;
+        setVisibleVideo('video-1');
+        state.activeVideo = 'video-1';
+        state.playback = 'ready';
+        state.scene = 'base';
+        state.selectedScene = null;
+        setTitleHidden(false);
+        updateControllerSelection(null);
+        setNotice('A new era of connection is opening.');
+      }
+
+      function setControlDisabled(disabled) {
+        labelButtons.forEach(function (button) {
+          button.disabled = disabled;
+          button.style.pointerEvents = disabled ? 'none' : 'auto';
+        });
+      }
+
+      function setButtonStylesByScene() {
+        Object.keys(buttonByScene).forEach(function (sceneKey) {
+          var button = buttonByScene[sceneKey];
+          var label = sceneKey === 'vibeCheck' ? 'Vibe Check' : sceneKey === 'smartMatch' ? 'Smart Match' : sceneKey === 'realConnections' ? 'Real Connections' : 'VIP Access';
+          sceneMeta[sceneKey].label = label;
+          button.textContent = label;
+        });
+      }
+
+      function ensureCurrentTimeZero(videoEl, callback) {
+        if (!videoEl) return callback();
+        var onSeeked = function () {
+          videoEl.removeEventListener('seeked', onSeeked);
+          callback();
+        };
+
+        if (videoEl.readyState >= 2 && Math.abs(videoEl.currentTime) <= 0.001) {
+          return callback();
+        }
+
+        videoEl.addEventListener('seeked', onSeeked, { once: true });
+        videoEl.currentTime = 0;
+      }
+
+      function beginTransition(sceneKey) {
+        if (state.locked || state.scene !== 'base' || state.playback !== 'ready') {
+          return;
+        }
+
+        var targetVideoId = sceneMeta[sceneKey].forwardId;
+        var targetVideo = getVideoById(targetVideoId);
+        var currentVideo = getVideoById(state.activeVideo || 'video-1');
+
+        if (!targetVideo) return;
+
+        state.locked = true;
+        state.selectedScene = sceneKey;
+        state.direction = 'forward';
+        state.playback = 'starting';
+        state.pendingTarget = sceneKey;
+        setControlDisabled(true);
+        stage.classList.add('is-transitioning', 'is-collapsing');
+        stage.classList.remove('is-resetting');
+        setTitleHidden(true);
+        setNotice('Transitioning into ' + sceneMeta[sceneKey].label + '.');
+        announce('Opening ' + sceneMeta[sceneKey].label + ' scene.');
+
+        applyCapsulePosition('calc(50% - 100px)', '200px');
+        var trackEl = controller.querySelector('.track');
+        if (trackEl) {
+          trackEl.style.left = 'calc(50% - 96px)';
+          trackEl.style.width = '192px';
+        }
+
+        var targetLabel = buttonByScene[sceneKey];
+        if (targetLabel) {
+          targetLabel.style.transitionDelay = '0ms';
+          targetLabel.style.opacity = '1';
+          targetLabel.style.filter = 'blur(0)';
+          targetLabel.style.transform = 'translate(0, 0) scale(1)';
+        }
+
+        if (currentVideo) {
+          currentVideo.pause();
+        }
+
+        var markVisible = function () {
+          setVisibleVideo(targetVideoId);
+          state.activeVideo = targetVideoId;
+          targetVideo.play().catch(function () {
+            announce('Playback could not start. Please retry.');
+            setStatus('Error');
+            setNotice('Retry');
+            stage.classList.remove('is-collapsing', 'is-transitioning');
+            setControlDisabled(false);
+            state.locked = false;
+            state.playback = 'error';
+          });
+        };
+
+        ensureCurrentTimeZero(targetVideo, function () {
+          targetVideo.pause();
+          targetVideo.muted = true;
+          setVisibleVideo(state.activeVideo || 'video-1');
+          targetVideo.addEventListener('loadeddata', function onReady() {
+            if (targetVideo.readyState >= 2) {
+              targetVideo.removeEventListener('loadeddata', onReady);
+              setTimeout(function () {
+                markVisible();
+                setTimeout(function () {
+                  stage.classList.remove('is-collapsing');
+                  stage.classList.add('is-working');
+                  setStatus('Playing');
+                  targetVideo.addEventListener('timeupdate', function onTimeUpdate() {
+                    var hold = sceneMeta[sceneKey].terminalHold || 0.08;
+                    var endCutoff = Math.max(0, targetVideo.duration - hold);
+                    if (targetVideo.currentTime >= endCutoff && !targetVideo.paused) {
+                      targetVideo.pause();
+                      targetVideo.removeEventListener('timeupdate', onTimeUpdate);
+                      completeSelectedState(sceneKey);
+                    }
+                  });
+                }, 160);
+              }, 150);
+            }
+          }, { once: true });
+
+          targetVideo.load();
+        });
+      }
+
+      function completeSelectedState(sceneKey) {
+        state.scene = sceneKey;
+        state.playback = 'playing';
+        stage.classList.remove('is-transitioning', 'is-collapsing', 'is-working');
+        stage.classList.add('is-selected');
+        setStatus('Selected');
+        setNotice('Scene selected — choose Reset to return home.');
+        announce('Selected ' + sceneMeta[sceneKey].label + '.');
+        labelButtons.forEach(function (button) {
+          button.disabled = false;
+          button.style.pointerEvents = 'auto';
+        });
+
+        Object.keys(buttonByScene).forEach(function (key) {
+          var button = buttonByScene[key];
+          button.classList.toggle('reset', key === sceneKey);
+          if (key === sceneKey) {
+            button.textContent = 'Reset';
+          } else {
+            button.textContent = sceneMeta[key].label;
+          }
+        });
+
+        state.locked = false;
+        state.playback = 'ready';
+        setControlDisabled(false);
+        state.selectedScene = sceneKey;
+        document.body.style.cursor = 'default';
+      }
+
+      function resetToBase() {
+        if (state.locked || !state.selectedScene || state.scene === 'base') {
+          return;
+        }
+
+        var sceneKey = state.selectedScene;
+        var reverseVideoId = sceneMeta[sceneKey].reverseId;
+        var reverseVideo = getVideoById(reverseVideoId);
+        var currentVideo = getVideoById(state.activeVideo || 'video-1');
+
+        if (!reverseVideo) return;
+
+        state.locked = true;
+        state.direction = 'reverse';
+        state.playback = 'starting';
+        setControlDisabled(true);
+        stage.classList.add('is-resetting');
+        stage.classList.remove('is-selected');
+        stage.classList.add('title-hidden');
+        setNotice('Returning to base scene.');
+        announce('Resetting to base.');
+
+        if (currentVideo) {
+          currentVideo.pause();
+        }
+
+        setVisibleVideo(reverseVideoId);
+        state.activeVideo = reverseVideoId;
+
+        reverseVideo.pause();
+        reverseVideo.currentTime = 0;
+        reverseVideo.muted = true;
+        reverseVideo.play().catch(function () {
+          announce('Reset playback failed.');
+        });
+
+        var reverseHold = sceneMeta[sceneKey].reverseHold || 0.08;
+        var targetDuration = reverseVideo.duration || sceneMeta[sceneKey].duration || 2.08;
+        var cutoff = Math.max(0.2, targetDuration - reverseHold);
+
+        setTimeout(function () {
+          stage.classList.remove('is-resetting');
+          stage.classList.add('is-transitioning');
+          applyCapsulePosition('-5px', 'calc(20% + 5px)');
+          if (controller.querySelector('.track')) {
+            controller.querySelector('.track').style.left = '0';
+            controller.querySelector('.track').style.width = '100%';
+          }
+        }, 120);
+
+        reverseVideo.addEventListener('timeupdate', function onReverseTimeUpdate() {
+          if (reverseVideo.currentTime >= cutoff) {
+            reverseVideo.pause();
+            reverseVideo.removeEventListener('timeupdate', onReverseTimeUpdate);
+            setVisibleVideo('video-1');
+            state.activeVideo = 'video-1';
+            state.scene = 'base';
+            state.selectedScene = null;
+            state.playback = 'ready';
+            state.locked = false;
+            setControlDisabled(false);
+            setTitleHidden(false);
+            stage.classList.remove('is-transitioning', 'is-selected', 'is-collapsing', 'is-working');
+            resetTrackPosition();
+            updateControllerSelection(null);
+            setStatus('Ready');
+            setNotice('A new era of connection is opening.');
+            announce('Returned to base.');
+            Object.keys(buttonByScene).forEach(function (key) {
+              var button = buttonByScene[key];
+              button.textContent = sceneMeta[key].label || button.textContent;
+              button.classList.remove('reset');
+            });
+          }
+        });
+      }
+
+      function handleMouseMove(event) {
+        var rect = controller.getBoundingClientRect();
+        var x = ((event.clientX - rect.left) / rect.width) * 100;
+        var y = ((event.clientY - rect.top) / rect.height) * 100;
+        controller.style.setProperty('--glass-x', Math.min(100, Math.max(0, x)) + '%');
+        controller.style.setProperty('--glass-y', Math.min(100, Math.max(0, y)) + '%');
+      }
+
+      controller.addEventListener('pointermove', handleMouseMove);
+      controller.addEventListener('pointerenter', function () {
+        stage.classList.add('is-hovering');
+      });
+      controller.addEventListener('pointerleave', function () {
+        if (!state.selectedScene) {
+          stage.classList.remove('is-hovering');
+        }
+      });
+
+      labelButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var sceneKey = button.dataset.scene;
+          if (state.scene === 'base' && !state.locked) {
+            beginTransition(sceneKey);
+            return;
+          }
+
+          if (state.scene === sceneKey && !state.locked) {
+            resetToBase();
+          }
+        });
+      });
+
+      joinButton.addEventListener('click', function () {
+        emailInput.focus();
+        emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      waitlistForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var email = emailInput.value.trim();
+        if (!email || !email.includes('@')) {
+          announce('Please enter a valid email address.');
+          emailInput.focus();
+          return;
+        }
+
+        waitlistForm.classList.add('success');
+        waitlistForm.querySelector('button').textContent = 'You’re on the list!';
+        announce('You are on the list.');
+        setNotice('You’re on the list!');
+
+        var supabaseUrl = window.SUPABASE_URL || 'https://example.supabase.co';
+        var supabaseAnonKey = window.SUPABASE_ANON_KEY || '';
+
+        if (supabaseAnonKey) {
+          fetch(supabaseUrl + '/rest/v1/waitlist', {
+            method: 'POST',
+            headers: {
+              'apikey': supabaseAnonKey,
+              'Authorization': 'Bearer ' + supabaseAnonKey,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({ email: email })
+          }).catch(function () {
+            announce('Submission queued locally.');
+          });
+        }
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          setStatus('Paused');
+        } else if (state.scene === 'base') {
+          setStatus('Ready');
+        }
+      });
+
+      setButtonStylesByScene();
+      setupInitialBaseVideo();
+      setControlDisabled(false);
+      setStatus('Ready');
+      setNotice('A new era of connection is opening.');
+      announce('Page ready.');
+    }());
+  </script>
+</body>
 </html>
