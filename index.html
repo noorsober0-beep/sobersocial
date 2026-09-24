@@ -1,50 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0D0806">
   <title>Sober Social — Dating Reimagined</title>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,600&display=swap" rel="stylesheet" />
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --retake-ease: cubic-bezier(0.16, 1, 0.3, 1);
-      --retake-slow-ease: cubic-bezier(0.65, 0, 0.35, 1);
-
+      --color-espresso: #2B1D16;
       --color-terracotta: #C46231;
       --color-terracotta-hover: #D86F3A;
       --color-linen: #F5EFE0;
-      
-      /* Crystal Glass Palette */
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --glass-bg-track: rgba(18, 11, 8, 0.45);
-      --glass-bg-capsule: rgba(196, 98, 49, 0.45);
+      --bg-dark: #0D0806;
+      --glass-border: rgba(245, 239, 224, 0.18);
+      --glass-bg-track: rgba(43, 29, 22, 0.60);
+      --glass-bg-capsule: rgba(196, 98, 49, 0.35);
+      --retake-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --retake-slow-ease: cubic-bezier(0.65, 0, 0.35, 1);
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
       margin: 0;
       padding: 0;
-    }
-
-    ::selection {
-      background: rgba(196, 98, 49, 0.4);
+      overflow-x: hidden;
+      background: var(--bg-dark);
       color: var(--color-linen);
+      font-family: 'Manrope', system-ui, sans-serif;
     }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #080504;
-      color: var(--color-linen);
-      font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
+    ::selection { background: rgba(196, 98, 49, 0.4); color: var(--color-linen); }
+    :focus-visible { outline: 2px solid var(--color-terracotta); outline-offset: 3px; }
+    button, input { font: inherit; }
 
     .stage {
       position: relative;
@@ -53,544 +43,499 @@
       height: 100vh;
       height: 100dvh;
       overflow: hidden;
-      background: #080504;
+      background: var(--bg-dark);
     }
-
-    /* Video Media Layers */
+    .stage::after {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      content: '';
+      background: radial-gradient(circle at 50% 35%, transparent 22%, rgba(13, 8, 6, .2) 75%),
+        linear-gradient(to bottom, rgba(13, 8, 6, .55), transparent 26%, transparent 68%, rgba(13, 8, 6, .82));
+    }
     .media {
       position: absolute;
       inset: 0;
+      z-index: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
-      z-index: 0;
       pointer-events: none;
       visibility: hidden;
     }
+    .media.is-active { visibility: visible; }
 
-    .media.active {
-      visibility: visible;
-    }
-
-    /* Vignette Gradient for Readability */
-    .stage::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.55) 100%),
-                  linear-gradient(to bottom, rgba(8, 5, 4, 0.6) 0%, transparent 25%, transparent 75%, rgba(8, 5, 4, 0.8) 100%);
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    /* Header */
-    header {
+    .header {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: calc(28px + env(safe-area-inset-top)) 48px 0;
       z-index: 30;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      width: 100%;
+      padding: calc(36px + env(safe-area-inset-top)) 40px 32px;
     }
-
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      text-decoration: none;
-    }
-
-    .brand-title {
-      font-family: 'Manrope', sans-serif;
-      font-weight: 800;
-      font-size: 18px;
-      letter-spacing: 0.12em;
-      color: var(--color-linen);
-      text-transform: uppercase;
-    }
-
-    .meta {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(245, 239, 224, 0.7);
-    }
-
-    .btn-header {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      padding: 10px 24px;
-      border-radius: 999px;
-      border: 1px solid var(--glass-border);
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      gap: 12px;
       color: var(--color-linen);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .14em;
       text-decoration: none;
-      transition: all 300ms var(--retake-ease);
+      text-transform: uppercase;
     }
-
-    .btn-header:hover {
-      background: var(--color-terracotta);
-      border-color: var(--color-terracotta);
-      box-shadow: 0 4px 20px rgba(196, 98, 49, 0.35);
+    .brand-mark { width: 31px; height: 30px; flex: none; }
+    .meta {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      color: rgba(245, 239, 224, .72);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
     }
+    .join-button {
+      display: inline-grid;
+      width: 152px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid rgba(245, 239, 224, .35);
+      border-radius: 999px;
+      color: var(--color-linen);
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      transition: background 240ms var(--retake-ease), border-color 240ms var(--retake-ease);
+    }
+    .join-button:hover { border-color: var(--color-terracotta); background: rgba(196, 98, 49, .3); }
 
-    /* Hero Typography */
     .hero {
       position: absolute;
       inset: 0;
       z-index: 10;
-      pointer-events: none;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      flex-direction: column;
+      pointer-events: none;
     }
-
-    .title-wrapper {
-      position: absolute;
-      top: 14%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(920px, calc(100vw - 40px));
+    .hero-copy {
+      width: min(1050px, calc(100% - 40px));
+      margin-top: clamp(150px, 22vh, 215px);
       text-align: center;
     }
-
     h1 {
+      margin: 0;
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(44px, 5.2vw, 84px);
-      font-weight: 500;
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-      text-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+      font-size: clamp(48px, 5.5vw, 82px);
+      font-weight: 600;
+      letter-spacing: -.045em;
+      line-height: 1.04;
+      text-shadow: 0 10px 30px rgba(0, 0, 0, .65);
     }
-
     h1 span {
       display: inline-block;
-      transition: opacity 800ms var(--retake-ease), filter 800ms var(--retake-ease), transform 800ms var(--retake-ease);
+      transition: filter 780ms var(--retake-ease), opacity 780ms var(--retake-ease), transform 780ms var(--retake-ease);
     }
-
-    .stage.title-hidden h1 span {
-      opacity: 0;
-      filter: blur(12px);
-      transform: translateY(-12px);
+    .title-hidden h1 span { filter: blur(12px); opacity: 0; transform: translateY(-12px); }
+    h1 span:nth-child(2) { transition-delay: 25ms; }
+    h1 span:nth-child(3) { transition-delay: 50ms; }
+    h1 span:nth-child(4) { transition-delay: 75ms; }
+    h1 span:nth-child(5) { transition-delay: 100ms; }
+    h1 span:nth-child(6) { transition-delay: 125ms; }
+    .hero-copy p {
+      max-width: 500px;
+      margin: 24px auto 0;
+      color: rgba(245, 239, 224, .8);
+      font-size: clamp(14px, 1.25vw, 17px);
+      line-height: 1.7;
     }
-
-    /* Compact Elegant Waitlist Form */
-    .waitlist-form-container {
+    .waitlist {
       position: absolute;
-      bottom: 125px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(440px, calc(100vw - 40px));
+      top: 53%;
+      width: min(520px, calc(100% - 40px));
       pointer-events: auto;
-      z-index: 25;
     }
-
     .waitlist-form {
       display: flex;
-      align-items: center;
-      padding: 4px 4px 4px 18px;
-      border-radius: 999px;
-      background: rgba(18, 11, 8, 0.4);
+      gap: 8px;
+      padding: 7px;
       border: 1px solid var(--glass-border);
-      backdrop-filter: blur(24px) saturate(140%);
-      -webkit-backdrop-filter: blur(24px) saturate(140%);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      transition: border-color 300ms var(--retake-ease), box-shadow 300ms var(--retake-ease);
+      border-radius: 999px;
+      background: rgba(43, 29, 22, .6);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, .2);
+      backdrop-filter: blur(14px) saturate(130%);
+      transition: box-shadow 240ms var(--retake-ease), border-color 240ms var(--retake-ease);
     }
-
     .waitlist-form:focus-within {
-      border-color: rgba(196, 98, 49, 0.8);
-      box-shadow: 0 20px 40px rgba(196, 98, 49, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(196, 98, 49, .72);
+      box-shadow: 0 0 0 4px rgba(196, 98, 49, .13), 0 18px 45px rgba(0, 0, 0, .25);
     }
-
-    .waitlist-input {
+    .waitlist-form input {
+      min-width: 0;
       flex: 1;
+      border: 0;
+      outline: 0;
+      padding: 11px 17px;
+      color: var(--color-linen);
       background: transparent;
-      border: none;
-      font-family: 'Manrope', sans-serif;
       font-size: 14px;
-      color: var(--color-linen);
-      outline: none;
     }
-
-    .waitlist-input::placeholder {
-      color: rgba(245, 239, 224, 0.45);
-    }
-
-    .waitlist-submit {
-      padding: 10px 20px;
+    .waitlist-form input::placeholder { color: rgba(245, 239, 224, .55); }
+    .waitlist-form button {
+      flex: none;
+      border: 0;
       border-radius: 999px;
-      border: none;
+      padding: 0 22px;
+      color: var(--color-linen);
       background: var(--color-terracotta);
-      color: var(--color-linen);
-      font-family: 'Manrope', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
       cursor: pointer;
-      transition: background 250ms var(--retake-ease), transform 150ms var(--retake-ease);
-      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 700;
+      transition: background 240ms var(--retake-ease);
     }
-
-    .waitlist-submit:hover {
-      background: var(--color-terracotta-hover);
-      transform: scale(1.02);
-    }
-
-    .waitlist-message {
-      display: none;
-      text-align: center;
-      padding: 12px 24px;
+    .waitlist-form button:hover { background: var(--color-terracotta-hover); }
+    .waitlist-form button:disabled { cursor: wait; opacity: .7; }
+    .success-badge, .error-message {
+      padding: 19px 24px;
+      border: 1px solid rgba(196, 98, 49, .55);
       border-radius: 999px;
-      background: rgba(18, 11, 8, 0.8);
-      border: 1px solid var(--color-terracotta);
-      color: var(--color-linen);
-      font-size: 14px;
-      font-weight: 600;
-      backdrop-filter: blur(20px);
+      background: rgba(43, 29, 22, .78);
+      text-align: center;
+      font-size: 13px;
+      backdrop-filter: blur(14px);
     }
+    .error-message { border-color: rgba(220, 112, 72, .55); }
 
-    .waitlist-message.active {
-      display: block;
-      animation: fadeIn 400ms var(--retake-ease);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Glass Bottom Controller */
     .controller {
+      --cap-left: -5px;
+      --cap-width: calc(20% + 5px);
+      --glass-x: 50%;
+      --glass-y: 50%;
       position: absolute;
-      bottom: 40px;
+      top: 78%;
       left: 50%;
-      transform: translateX(-50%);
-      width: min(840px, calc(100vw - 40px));
-      height: 56px;
       z-index: 20;
+      width: min(760px, calc(100% - 64px));
+      height: 56px;
+      transform: translateX(-50%);
     }
-
     .track {
       position: absolute;
-      inset: 0;
+      top: 4px;
+      inset-inline: 0;
+      height: 48px;
+      border: 1px solid var(--glass-border);
       border-radius: 999px;
       background: var(--glass-bg-track);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(20px) saturate(130%);
-      -webkit-backdrop-filter: blur(20px) saturate(130%);
-      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-      transition: all 800ms var(--retake-slow-ease);
+      backdrop-filter: blur(12px) saturate(130%) contrast(108%);
+      transition: opacity 620ms var(--retake-ease);
     }
-
-    .capsule {
-      position: absolute;
-      top: 3px;
-      bottom: 3px;
-      border-radius: 999px;
-      left: var(--cap-left, 3px);
-      width: var(--cap-width, calc(20% - 3px));
-      background: var(--glass-bg-capsule);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-      transition: left 500ms var(--retake-ease), width 500ms var(--retake-ease);
-      pointer-events: none;
-    }
-
-    .cells {
+    .track::after, .capsule::after {
       position: absolute;
       inset: 0;
+      pointer-events: none;
+      content: '';
+      border-radius: inherit;
+      background: radial-gradient(circle at var(--glass-x) var(--glass-y), rgba(245, 239, 224, .17), transparent 34%);
+    }
+    .capsule {
+      position: absolute;
+      top: -1px;
+      left: var(--cap-left);
+      width: var(--cap-width);
+      height: 56px;
+      border: 1px solid rgba(245, 239, 224, .4);
+      border-radius: 999px;
+      background: var(--glass-bg-capsule);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      pointer-events: none;
+      transition: left 620ms var(--retake-ease), width 620ms var(--retake-ease);
+      backdrop-filter: blur(12px) saturate(130%);
+    }
+    .controller.is-selected .track { opacity: .2; }
+    .controller.is-selected .capsule { left: 50%; width: 180px; transform: translateX(-50%); }
+    .controller-grid {
+      position: relative;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      align-items: center;
-    }
-
-    .cell {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       height: 100%;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
+    }
+    .controller-grid > * {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      padding: 0 9px;
+      color: rgba(245, 239, 224, .78);
       background: transparent;
-      border: none;
-      color: var(--color-linen);
+      border: 0;
       cursor: pointer;
-      transition: opacity 300ms var(--retake-ease);
-    }
-
-    .cell-label {
-      cursor: default;
-      opacity: 0.5;
       font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: .03em;
+      text-align: center;
+      transition: color 240ms var(--retake-ease);
     }
-
-    /* Collapsed Controller State */
-    .stage.collapsed .track {
-      left: calc(50% - 90px);
-      width: 180px;
-      opacity: 0;
-    }
-
-    .stage.collapsed .capsule {
-      left: calc(50% - 90px) !important;
-      width: 180px !important;
-      background: rgba(18, 11, 8, 0.85);
-      border-color: var(--color-terracotta);
-    }
-
-    .stage.collapsed .cell {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .stage.collapsed .cell.active-chosen {
-      opacity: 1;
+    .controller-grid > *:hover, .controller-grid > .is-reset { color: var(--color-linen); }
+    .controller-grid .state-label { cursor: default; color: var(--color-linen); }
+    .controller-grid button:disabled { cursor: not-allowed; opacity: .42; }
+    .controller-grid .is-reset { color: var(--color-terracotta-hover); text-decoration: underline; text-underline-offset: 4px; }
+    .sr-status {
       position: absolute;
-      left: 50%;
-      top: 0;
-      width: 180px;
-      height: 56px;
-      transform: translateX(-50%);
-      pointer-events: auto;
-      color: var(--color-terracotta);
-      font-weight: 700;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
-    /* Mobile Adjustments */
-    @media (max-width: 768px) {
-      header { padding: 20px 24px 0; }
+    @media (max-width: 900px) {
+      .header { padding-inline: 24px; }
+      .meta { gap: 10px; font-size: 10px; }
+      .controller-grid > * { padding-inline: 5px; font-size: 10px; }
+    }
+    @media (max-width: 700px) {
+      .header { padding: calc(22px + env(safe-area-inset-top)) 18px 20px; }
+      .brand { gap: 8px; font-size: 12px; }
+      .brand-mark { width: 25px; height: 25px; }
       .meta { display: none; }
-      h1 { font-size: clamp(36px, 8vw, 48px); }
-      .title-wrapper { top: 12%; }
-      .waitlist-form-container { bottom: 100px; }
-      .controller { bottom: 24px; height: 110px; }
-      .cells { grid-template-columns: repeat(2, 1fr); }
-      .cell-label { grid-column: 1 / -1; }
-      .capsule { display: none; }
+      .join-button { width: 124px; height: 35px; font-size: 11px; }
+      .hero-copy { margin-top: 140px; }
+      h1 { font-size: clamp(44px, 12vw, 66px); line-height: 1.08; }
+      .hero-copy p { max-width: 330px; margin-top: 18px; font-size: 13px; }
+      .waitlist { top: 52%; }
+      .waitlist-form { display: grid; border-radius: 24px; padding: 8px; }
+      .waitlist-form button { min-height: 42px; }
+      .controller { top: auto; bottom: 8px; width: calc(100% - 48px); height: 92px; }
+      .track { top: 0; height: 92px; border-radius: 20px; }
+      .capsule { top: 0; height: 46px; border-radius: 16px; }
+      .controller-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); }
+      .controller-grid .state-label { grid-column: 1 / -1; }
+      .controller.is-selected .capsule { left: 50%; width: calc(50% - 2px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 1ms !important; }
     }
   </style>
 </head>
 <body>
+  <main class="stage" id="stage">
+    <video class="media is-active" id="video-1" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-1.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <video class="media" id="video-1-reverse" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-1-reverse.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <video class="media" id="video-2" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-2.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <video class="media" id="video-2-reverse" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-2-reverse.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <video class="media" id="video-3" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-3.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <video class="media" id="video-3-reverse" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-3-reverse.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <video class="media" id="video-4" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-4.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <video class="media" id="video-4-reverse" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-4-reverse.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
 
-  <div class="stage" id="stage">
-
-    <!-- 8 Persistent R2 Remote Video Streams -->
-    <video id="vid-real-fwd" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-1.mp4"></video>
-    <video id="vid-real-rev" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-1-reverse.mp4"></video>
-    <video id="vid-vibe-fwd" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-2.mp4"></video>
-    <video id="vid-vibe-rev" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-2-reverse.mp4"></video>
-    <video id="vid-match-fwd" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-3.mp4"></video>
-    <video id="vid-match-rev" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-3-reverse.mp4"></video>
-    <video id="vid-vip-fwd" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-4.mp4"></video>
-    <video id="vid-vip-rev" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-4-reverse.mp4"></video>
-
-    <!-- Navigation -->
-    <header>
-      <a href="#" class="brand">
-        <svg width="28" height="24" viewBox="0 0 40 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 2H20L12 18H4V2Z" fill="#F5EFE0"/>
-          <path d="M12 18V30M6 30H18" stroke="#F5EFE0" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M36 2H20L28 18H36V2Z" fill="#C46231"/>
-          <path d="M28 18V30M22 30H34" stroke="#C46231" stroke-width="2.5" stroke-linecap="round"/>
+    <header class="header">
+      <a class="brand" href="/" aria-label="Sober Social home">
+        <svg class="brand-mark" viewBox="0 0 42 40" aria-hidden="true">
+          <path fill="#2B1D16" d="M2 3h18l-5.1 13.2c-.5 1.3-1.3 2.4-2.4 3.3V34h4v3H5v-3h4V19.5c-1.1-.9-1.9-2-2.4-3.3L2 3Z"/>
+          <path fill="#C46231" d="M19 3h20l-5.7 13.8c-.6 1.4-1.5 2.6-2.7 3.5V34h4v3H23v-3h4V20.3c-1.2-.9-2.1-2.1-2.7-3.5L19 3Z"/>
         </svg>
-        <span class="brand-title">Sober Social</span>
+        <span>Sober Social</span>
       </a>
-      
-      <div class="meta">
-        <span>Dating Reimagined</span>
-        <span>•</span>
-        <span>Early Access</span>
-      </div>
-
-      <a href="#waitlist" class="btn-header" id="btn-header-join">Join Waitlist</a>
+      <div class="meta"><span>Dating Reimagined</span><span aria-hidden="true">•</span><span>Early Access Launch</span></div>
+      <button class="join-button" id="join-button" type="button">Join Waitlist</button>
     </header>
 
-    <!-- Hero Title -->
-    <main class="hero">
-      <div class="title-wrapper">
-        <h1>
-          <span>Unlock</span> <span>a</span> <span>New</span> <span>World</span> <span>of</span> <span>Connection.</span>
-        </h1>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <h1 id="hero-title"><span>Unlock</span> <span>a</span> <span>New</span> <span>World</span> <span>of</span> <span>Connection.</span></h1>
+        <p>Dating is broken. We’re rebuilding it from the chemistry up. Get early access before the crowd.</p>
       </div>
-
-      <div class="waitlist-form-container" id="waitlist">
+      <div class="waitlist" id="waitlist">
         <form class="waitlist-form" id="waitlist-form">
-          <input type="email" required placeholder="Enter your email" class="waitlist-input" id="waitlist-email" />
-          <button type="submit" class="waitlist-submit" id="waitlist-btn">Get Access</button>
+          <label class="sr-status" for="email">Email address</label>
+          <input id="email" type="email" autocomplete="email" placeholder="Enter your email" required>
+          <button type="submit" id="submit-button">Claim Early Access</button>
         </form>
-        <div class="waitlist-message" id="waitlist-message"></div>
       </div>
-    </main>
+    </section>
 
-    <!-- Controller Bar -->
-    <nav class="controller" id="controller">
+    <nav class="controller" id="controller" aria-label="Explore Sober Social">
       <div class="track"></div>
-      <div class="capsule" id="capsule"></div>
-      <div class="cells">
-        <div class="cell cell-label">Select state →</div>
-        <button class="cell" data-index="1" data-key="vibeCheck">Vibe Check</button>
-        <button class="cell" data-index="2" data-key="smartMatch">Smart Match</button>
-        <button class="cell" data-index="3" data-key="realConnections">Real Connections</button>
-        <button class="cell" data-index="4" data-key="vipAccess">VIP Access</button>
+      <div class="capsule"></div>
+      <div class="controller-grid">
+        <span class="state-label">Select state →</span>
+        <button type="button" data-index="1" data-video="video-2">Vibe Check</button>
+        <button type="button" data-index="2" data-video="video-3">Smart Match</button>
+        <button type="button" data-index="3" data-video="video-1">Real Connections</button>
+        <button type="button" data-index="4" data-video="video-4">VIP Access</button>
       </div>
     </nav>
-
-  </div>
+    <div class="sr-status" id="status" role="status" aria-live="polite"></div>
+  </main>
 
   <script>
-    (function () {
-      'use strict';
+    (() => {
+      const stage = document.getElementById('stage');
+      const controller = document.getElementById('controller');
+      const status = document.getElementById('status');
+      const buttons = [...controller.querySelectorAll('button')];
+      const videos = [...stage.querySelectorAll('video')];
+      const form = document.getElementById('waitlist-form');
+      const emailInput = document.getElementById('email');
+      const submitButton = document.getElementById('submit-button');
+      const sceneLabels = { 'video-2': 'Vibe Check', 'video-3': 'Smart Match', 'video-1': 'Real Connections', 'video-4': 'VIP Access' };
+      let state = 'base';
+      let activeScene = null;
+      let locked = false;
+      let activeVideo = document.getElementById('video-1');
 
-      var mediaMap = {
-        vibeCheck: { fwd: document.getElementById('vid-vibe-fwd'), rev: document.getElementById('vid-vibe-rev'), fwdHold: 0.08, revHold: 0.18 },
-        smartMatch: { fwd: document.getElementById('vid-match-fwd'), rev: document.getElementById('vid-match-rev'), fwdHold: 0.08, revHold: 0.08 },
-        realConnections: { fwd: document.getElementById('vid-real-fwd'), rev: document.getElementById('vid-real-rev'), fwdHold: 0.08, revHold: 0.08 },
-        vipAccess: { fwd: document.getElementById('vid-vip-fwd'), rev: document.getElementById('vid-vip-rev'), fwdHold: 0.08, revHold: 0.08 }
+      const announce = (message) => { status.textContent = message; };
+      const setCapsule = (index) => {
+        if (index === 0) {
+          controller.style.setProperty('--cap-left', '-5px');
+          controller.style.setProperty('--cap-width', 'calc(20% + 5px)');
+        } else {
+          controller.style.setProperty('--cap-left', `${index * 20}%`);
+          controller.style.setProperty('--cap-width', '20%');
+        }
       };
-
-      var stage = document.getElementById('stage');
-      var controller = document.getElementById('controller');
-      var capsule = document.getElementById('capsule');
-      var buttons = document.querySelectorAll('.cell[data-key]');
-      var form = document.getElementById('waitlist-form');
-      var emailInput = document.getElementById('waitlist-email');
-      var submitBtn = document.getElementById('waitlist-btn');
-      var messageBox = document.getElementById('waitlist-message');
-
-      var currentState = {
-        scene: 'base',
-        busy: false,
-        activeVid: mediaMap.realConnections.fwd
+      const setActiveVideo = (video) => {
+        videos.forEach((item) => item.classList.toggle('is-active', item === video));
+        activeVideo = video;
       };
-
-      currentState.activeVid.classList.add('active');
-      currentState.activeVid.currentTime = 0;
-
-      function setCapsulePos(index) {
-        var positions = [
-          { left: '3px', width: 'calc(20% - 3px)' },
-          { left: '20%', width: '20%' },
-          { left: '40%', width: '20%' },
-          { left: '60%', width: '20%' },
-          { left: '80%', width: 'calc(20% - 3px)' }
-        ];
-        var pos = positions[index] || positions[0];
-        capsule.style.setProperty('--cap-left', pos.left);
-        capsule.style.setProperty('--cap-width', pos.width);
-      }
-
-      buttons.forEach(function (btn) {
-        btn.addEventListener('mouseenter', function () {
-          if (currentState.scene === 'base' && !currentState.busy) {
-            setCapsulePos(parseInt(btn.getAttribute('data-index'), 10));
+      const pauseAtEnd = (video, done) => {
+        const hold = () => {
+          if (video.duration && video.currentTime >= video.duration - 0.08) {
+            video.pause();
+            video.removeEventListener('timeupdate', hold);
+            done();
           }
+        };
+        video.addEventListener('timeupdate', hold);
+        video.addEventListener('ended', () => { video.pause(); done(); }, { once: true });
+      };
+      const playSequence = (video, done) => {
+        video.currentTime = 0;
+        setActiveVideo(video);
+        video.play().then(() => pauseAtEnd(video, done)).catch(() => {
+          video.pause();
+          done();
+          announce('The selected scene could not be played.');
         });
+      };
+      const resetButtons = () => buttons.forEach((button) => {
+        button.disabled = false;
+        button.classList.remove('is-reset');
+        button.textContent = sceneLabels[button.dataset.video];
+      });
+      const selectScene = (button) => {
+        if (locked || activeScene) return;
+        locked = true;
+        activeScene = button.dataset.video;
+        state = 'forward';
+        controller.classList.add('is-selected');
+        stage.classList.add('title-hidden');
+        buttons.forEach((item) => { item.disabled = true; });
+        button.classList.add('is-reset');
+        button.textContent = 'Reset';
+        announce(`Loading ${sceneLabels[activeScene]}.`);
+        const video = document.getElementById(activeScene);
+        const commit = () => {
+          state = 'selected';
+          locked = false;
+          button.disabled = false;
+          announce(`${sceneLabels[activeScene]} selected.`);
+        };
+        if (video.readyState >= 2) playSequence(video, commit);
+        else video.addEventListener('loadeddata', () => playSequence(video, commit), { once: true });
+      };
+      const resetScene = (button) => {
+        if (locked || !activeScene) return;
+        locked = true;
+        state = 'reverse';
+        buttons.forEach((item) => { item.disabled = true; });
+        announce(`Resetting ${sceneLabels[activeScene]}.`);
+        const video = document.getElementById(`${activeScene}-reverse`);
+        const commit = () => {
+          controller.classList.remove('is-selected');
+          setCapsule(0);
+          stage.classList.remove('title-hidden');
+          activeScene = null;
+          state = 'base';
+          locked = false;
+          resetButtons();
+          setActiveVideo(document.getElementById('video-1'));
+          announce('Returned to the base state.');
+        };
+        if (video.readyState >= 2) playSequence(video, commit);
+        else video.addEventListener('loadeddata', () => playSequence(video, commit), { once: true });
+      };
+
+      document.getElementById('video-1').addEventListener('loadeddata', (event) => {
+        event.currentTarget.currentTime = 0;
+        event.currentTarget.play().then(() => event.currentTarget.pause()).catch(() => {});
+        announce('Sober Social is ready.');
+      }, { once: true });
+      buttons.forEach((button) => {
+        button.addEventListener('mouseenter', () => { if (!activeScene) setCapsule(Number(button.dataset.index)); });
+        button.addEventListener('focus', () => { if (!activeScene) setCapsule(Number(button.dataset.index)); });
+        button.addEventListener('click', () => activeScene ? resetScene(button) : selectScene(button));
+      });
+      controller.addEventListener('mouseleave', () => { if (!activeScene) setCapsule(0); });
+      controller.addEventListener('pointermove', (event) => {
+        const rect = controller.getBoundingClientRect();
+        controller.style.setProperty('--glass-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
+        controller.style.setProperty('--glass-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
+      });
+      document.getElementById('join-button').addEventListener('click', () => {
+        document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.setTimeout(() => emailInput.focus(), 350);
       });
 
-      controller.addEventListener('mouseleave', function () {
-        if (currentState.scene === 'base' && !currentState.busy) {
-          setCapsulePos(0);
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = emailInput.value.trim().toLowerCase();
+        if (!email || !emailInput.checkValidity()) return;
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending…';
+        announce('Sending your early access request.');
+        try {
+          const supabaseUrl = 'https://zyeddmxfbolbrmcjvjvc.supabase.co';
+          const supabaseAnonKey = window.SOBER_SOCIAL_SUPABASE_ANON_KEY || '';
+          if (!supabaseAnonKey) throw new Error('Waitlist service is not configured.');
+          const databaseResponse = await fetch(`${supabaseUrl}/rest/v1/waitlist`, {
+            method: 'POST',
+            headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+            body: JSON.stringify({ email, created_at: new Date().toISOString() })
+          });
+          if (!databaseResponse.ok) throw new Error('Could not save your request.');
+          const welcomeEndpoint = window.SOBER_SOCIAL_WELCOME_ENDPOINT || `${supabaseUrl}/functions/v1/waitlist-welcome`;
+          const emailResponse = await fetch(welcomeEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          if (!emailResponse.ok) throw new Error('Could not send the confirmation email.');
+          document.querySelector('.waitlist').innerHTML = '<div class="success-badge" role="status">You’re on the list! Welcome to Sober Social.</div>';
+          announce('You’re on the list! Welcome to Sober Social.');
+        } catch (error) {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Claim Early Access';
+          const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+          const errorElement = document.createElement('div');
+          errorElement.className = 'error-message';
+          errorElement.setAttribute('role', 'alert');
+          errorElement.textContent = message;
+          form.insertAdjacentElement('afterend', errorElement);
+          window.setTimeout(() => errorElement.remove(), 5000);
+          announce(message);
         }
       });
-
-      function playTransition(key, isReverse) {
-        if (currentState.busy) return;
-        currentState.busy = true;
-
-        var map = mediaMap[key];
-        var targetVid = isReverse ? map.rev : map.fwd;
-        var holdTime = isReverse ? map.revHold : map.fwdHold;
-
-        targetVid.currentTime = 0;
-
-        targetVid.play().then(function () {
-          currentState.activeVid.classList.remove('active');
-          currentState.activeVid.pause();
-
-          targetVid.classList.add('active');
-          currentState.activeVid = targetVid;
-
-          if (!isReverse) {
-            stage.classList.add('title-hidden');
-            stage.classList.add('collapsed');
-          } else {
-            stage.classList.remove('collapsed');
-          }
-
-          var checkHold = setInterval(function () {
-            if (targetVid.duration && (targetVid.duration - targetVid.currentTime) <= holdTime) {
-              targetVid.pause();
-              clearInterval(checkHold);
-              currentState.busy = false;
-
-              if (isReverse) {
-                currentState.scene = 'base';
-                stage.classList.remove('title-hidden');
-                setCapsulePos(0);
-                buttons.forEach(function (b) {
-                  b.classList.remove('active-chosen');
-                  b.textContent = b.getAttribute('data-original-text') || b.textContent;
-                });
-              } else {
-                currentState.scene = key;
-              }
-            }
-          }, 30);
-
-        }).catch(function (err) {
-          console.error(err);
-          currentState.busy = false;
-        });
-      }
-
-      buttons.forEach(function (btn) {
-        btn.setAttribute('data-original-text', btn.textContent);
-        btn.addEventListener('click', function () {
-          var key = btn.getAttribute('data-key');
-          if (currentState.scene === 'base') {
-            btn.classList.add('active-chosen');
-            btn.textContent = '✕ Reset';
-            playTransition(key, false);
-          } else if (currentState.scene === key) {
-            playTransition(key, true);
-          }
-        });
-      });
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var email = emailInput.value.trim();
-        if (!email) return;
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Joining...';
-
-        setTimeout(function() {
-          form.style.display = 'none';
-          messageBox.textContent = "You're on the list! Welcome.";
-          messageBox.classList.add('active');
-        }, 600);
-      });
-
     })();
   </script>
 </body>
