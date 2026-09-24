@@ -1,765 +1,597 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Sober Social — Clear Connection, Early Access</title>
-<meta name="description" content="Sober Social is clear-minded dating for intentional connection. Join the early access waitlist." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Sober Social — Dating Reimagined</title>
 
-:root {
-  --bg-deep: #070a0c;
-  --bg-charcoal: #0c1214;
-  --bg-teal: #0e1a1c;
-  --champagne: #d4c4a8;
-  --champagne-soft: #e8dcc8;
-  --champagne-muted: rgba(212, 196, 168, 0.55);
-  --sage: #8a9a88;
-  --sage-soft: rgba(138, 154, 136, 0.35);
-  --text: #f2efe8;
-  --text-muted: rgba(242, 239, 232, 0.68);
-  --text-dim: rgba(242, 239, 232, 0.45);
-  --glass: rgba(18, 26, 28, 0.55);
-  --glass-border: rgba(212, 196, 168, 0.14);
-  --glass-strong: rgba(22, 32, 34, 0.72);
-  --danger: #e8a0a0;
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --radius: 16px;
-  --radius-sm: 12px;
-}
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,600&display=swap" rel="stylesheet" />
 
-html { scroll-behavior: smooth; }
-html, body { min-height: 100%; }
-body {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-  background: var(--bg-deep);
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  line-height: 1.5;
-}
+  <style>
+    :root {
+      --retake-ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --retake-slow-ease: cubic-bezier(0.65, 0, 0.35, 1);
 
-button, input { font-family: inherit; }
-::selection { background: rgba(212, 196, 168, 0.28); color: #fff; }
-:focus-visible { outline: 2px solid var(--champagne); outline-offset: 3px; }
+      --color-terracotta: #C46231;
+      --color-terracotta-hover: #D86F3A;
+      --color-linen: #F5EFE0;
+      
+      /* Crystal Glass Palette */
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-bg-track: rgba(18, 11, 8, 0.45);
+      --glass-bg-capsule: rgba(196, 98, 49, 0.45);
+    }
 
-.visually-hidden {
-  position: absolute !important;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0, 0, 0, 0);
-  white-space: nowrap; border: 0;
-}
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-/* ---- Canvas background ---- */
-#bg-canvas {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
+    ::selection {
+      background: rgba(196, 98, 49, 0.4);
+      color: var(--color-linen);
+    }
 
-.ambient {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 80% 55% at 50% -10%, rgba(40, 70, 72, 0.45), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(60, 80, 70, 0.18), transparent 50%),
-    radial-gradient(ellipse 40% 35% at 10% 80%, rgba(80, 70, 50, 0.12), transparent 50%),
-    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-teal) 45%, var(--bg-charcoal) 100%);
-  opacity: 0.92;
-}
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #080504;
+      color: var(--color-linen);
+      font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
 
-.vignette {
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: radial-gradient(ellipse 70% 60% at 50% 40%, transparent 30%, rgba(5, 8, 10, 0.65) 100%);
-}
+    .stage {
+      position: relative;
+      isolation: isolate;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background: #080504;
+    }
 
-/* ---- Layout ---- */
-.page {
-  position: relative;
-  z-index: 10;
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-}
+    /* Video Media Layers */
+    .media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
 
-/* ---- Top bar ---- */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px clamp(20px, 4vw, 48px);
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-}
+    .media.active {
+      visibility: visible;
+    }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: inherit;
-}
+    /* Vignette Gradient for Readability */
+    .stage::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.55) 100%),
+                  linear-gradient(to bottom, rgba(8, 5, 4, 0.6) 0%, transparent 25%, transparent 75%, rgba(8, 5, 4, 0.8) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
 
-.brand-mark {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 35%, var(--champagne-soft), var(--champagne) 45%, transparent 70%),
-    radial-gradient(circle at 70% 65%, var(--sage), transparent 55%);
-  box-shadow: 0 0 20px rgba(212, 196, 168, 0.25);
-  flex-shrink: 0;
-}
+    /* Header */
+    header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: calc(28px + env(safe-area-inset-top)) 48px 0;
+      z-index: 30;
+    }
 
-.brand-name {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: 1.25rem;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  color: var(--text);
-}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
 
-.badge {
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--champagne);
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--glass-border);
-  background: var(--glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
+    .brand-title {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      color: var(--color-linen);
+      text-transform: uppercase;
+    }
 
-/* ---- Hero ---- */
-.hero {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 32px clamp(20px, 4vw, 48px) 48px;
-  max-width: 100%;
-}
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(245, 239, 224, 0.7);
+    }
 
-.hero-eyebrow {
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--champagne-muted);
-  margin-bottom: 20px;
-}
+    .btn-header {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: var(--color-linen);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      transition: all 300ms var(--retake-ease);
+    }
 
-.hero h1 {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-weight: 400;
-  font-size: clamp(2.25rem, 5.2vw + 0.5rem, 4.25rem);
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  max-width: min(920px, calc(100% - 48px));
-  width: 100%;
-  margin: 0 auto 20px;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  /* NEVER nowrap — title must wrap fully on all widths */
-  white-space: normal;
-}
+    .btn-header:hover {
+      background: var(--color-terracotta);
+      border-color: var(--color-terracotta);
+      box-shadow: 0 4px 20px rgba(196, 98, 49, 0.35);
+    }
 
-.hero h1 em {
-  font-style: italic;
-  color: var(--champagne-soft);
-}
+    /* Hero Typography */
+    .hero {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.hero-sub {
-  font-size: clamp(1rem, 1.5vw, 1.15rem);
-  font-weight: 400;
-  color: var(--text-muted);
-  max-width: min(540px, calc(100% - 32px));
-  margin: 0 auto 36px;
-  line-height: 1.6;
-}
+    .title-wrapper {
+      position: absolute;
+      top: 14%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(920px, calc(100vw - 40px));
+      text-align: center;
+    }
 
-/* ---- Waitlist form ---- */
-.waitlist {
-  width: 100%;
-  max-width: 480px;
-  margin: 0 auto 16px;
-}
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(44px, 5.2vw, 84px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      text-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+    }
 
-.waitlist-fields {
-  display: flex;
-  gap: 10px;
-  align-items: stretch;
-  padding: 8px;
-  border-radius: 999px;
-  background: var(--glass-strong);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-}
+    h1 span {
+      display: inline-block;
+      transition: opacity 800ms var(--retake-ease), filter 800ms var(--retake-ease), transform 800ms var(--retake-ease);
+    }
 
-.waitlist input[type="email"] {
-  flex: 1;
-  min-width: 0;
-  border: none;
-  background: transparent;
-  color: var(--text);
-  font-size: 0.95rem;
-  padding: 12px 18px;
-  outline: none;
-}
+    .stage.title-hidden h1 span {
+      opacity: 0;
+      filter: blur(12px);
+      transform: translateY(-12px);
+    }
 
-.waitlist input[type="email"]::placeholder {
-  color: var(--text-dim);
-}
+    /* Compact Elegant Waitlist Form */
+    .waitlist-form-container {
+      position: absolute;
+      bottom: 125px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(440px, calc(100vw - 40px));
+      pointer-events: auto;
+      z-index: 25;
+    }
 
-.waitlist button[type="submit"] {
-  flex-shrink: 0;
-  border: none;
-  cursor: pointer;
-  font-size: 0.88rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--bg-deep);
-  background: linear-gradient(135deg, var(--champagne-soft), var(--champagne));
-  padding: 12px 22px;
-  border-radius: 999px;
-  transition: transform 200ms var(--ease), box-shadow 200ms var(--ease), opacity 200ms;
-  box-shadow: 0 2px 12px rgba(212, 196, 168, 0.3);
-}
+    .waitlist-form {
+      display: flex;
+      align-items: center;
+      padding: 4px 4px 4px 18px;
+      border-radius: 999px;
+      background: rgba(18, 11, 8, 0.4);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: border-color 300ms var(--retake-ease), box-shadow 300ms var(--retake-ease);
+    }
 
-.waitlist button[type="submit"]:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 18px rgba(212, 196, 168, 0.4);
-}
+    .waitlist-form:focus-within {
+      border-color: rgba(196, 98, 49, 0.8);
+      box-shadow: 0 20px 40px rgba(196, 98, 49, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
 
-.waitlist button[type="submit"]:disabled {
-  opacity: 0.65;
-  cursor: wait;
-}
+    .waitlist-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      font-family: 'Manrope', sans-serif;
+      font-size: 14px;
+      color: var(--color-linen);
+      outline: none;
+    }
 
-.waitlist.success-mode .waitlist-fields { display: none; }
-.waitlist.success-mode .waitlist-success { display: block; }
+    .waitlist-input::placeholder {
+      color: rgba(245, 239, 224, 0.45);
+    }
 
-.waitlist-success {
-  display: none;
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: 1.35rem;
-  font-style: italic;
-  color: var(--champagne-soft);
-  padding: 18px 24px;
-  border-radius: var(--radius);
-  background: var(--glass-strong);
-  border: 1px solid rgba(212, 196, 168, 0.22);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
+    .waitlist-submit {
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: none;
+      background: var(--color-terracotta);
+      color: var(--color-linen);
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 250ms var(--retake-ease), transform 150ms var(--retake-ease);
+      white-space: nowrap;
+    }
 
-.waitlist-error {
-  min-height: 1.4em;
-  margin-top: 12px;
-  font-size: 0.85rem;
-  color: var(--danger);
-  text-align: center;
-}
+    .waitlist-submit:hover {
+      background: var(--color-terracotta-hover);
+      transform: scale(1.02);
+    }
 
-.waitlist-note {
-  font-size: 0.78rem;
-  color: var(--text-dim);
-  margin-top: 4px;
-  text-align: center;
-}
+    .waitlist-message {
+      display: none;
+      text-align: center;
+      padding: 12px 24px;
+      border-radius: 999px;
+      background: rgba(18, 11, 8, 0.8);
+      border: 1px solid var(--color-terracotta);
+      color: var(--color-linen);
+      font-size: 14px;
+      font-weight: 600;
+      backdrop-filter: blur(20px);
+    }
 
-/* ---- Features ---- */
-.features {
-  width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 24px clamp(20px, 4vw, 48px) 64px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
+    .waitlist-message.active {
+      display: block;
+      animation: fadeIn 400ms var(--retake-ease);
+    }
 
-.card {
-  position: relative;
-  padding: 28px 22px;
-  border-radius: var(--radius);
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  text-align: left;
-  transition: border-color 280ms var(--ease), transform 280ms var(--ease), background 280ms var(--ease);
-  overflow: hidden;
-}
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(212, 196, 168, 0.35), transparent);
-  opacity: 0.6;
-}
+    /* Glass Bottom Controller */
+    .controller {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(840px, calc(100vw - 40px));
+      height: 56px;
+      z-index: 20;
+    }
 
-.card:hover {
-  border-color: rgba(212, 196, 168, 0.28);
-  background: rgba(22, 32, 34, 0.78);
-  transform: translateY(-3px);
-}
+    .track {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: var(--glass-bg-track);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px) saturate(130%);
+      -webkit-backdrop-filter: blur(20px) saturate(130%);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      transition: all 800ms var(--retake-slow-ease);
+    }
 
-.card-icon {
-  width: 36px;
-  height: 36px;
-  margin-bottom: 16px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(212, 196, 168, 0.08);
-  border: 1px solid rgba(212, 196, 168, 0.12);
-  color: var(--champagne);
-}
+    .capsule {
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      border-radius: 999px;
+      left: var(--cap-left, 3px);
+      width: var(--cap-width, calc(20% - 3px));
+      background: var(--glass-bg-capsule);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      transition: left 500ms var(--retake-ease), width 500ms var(--retake-ease);
+      pointer-events: none;
+    }
 
-.card-icon svg {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
+    .cells {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+    }
 
-.card h3 {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: 1.2rem;
-  font-weight: 400;
-  margin-bottom: 8px;
-  color: var(--text);
-  letter-spacing: -0.01em;
-}
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      background: transparent;
+      border: none;
+      color: var(--color-linen);
+      cursor: pointer;
+      transition: opacity 300ms var(--retake-ease);
+    }
 
-.card p {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  line-height: 1.55;
-}
+    .cell-label {
+      cursor: default;
+      opacity: 0.5;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
 
-/* ---- Footer ---- */
-.footer {
-  padding: 20px clamp(20px, 4vw, 48px) 32px;
-  text-align: center;
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  letter-spacing: 0.04em;
-}
+    /* Collapsed Controller State */
+    .stage.collapsed .track {
+      left: calc(50% - 90px);
+      width: 180px;
+      opacity: 0;
+    }
 
-/* ---- Responsive ---- */
-@media (max-width: 900px) {
-  .features {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+    .stage.collapsed .capsule {
+      left: calc(50% - 90px) !important;
+      width: 180px !important;
+      background: rgba(18, 11, 8, 0.85);
+      border-color: var(--color-terracotta);
+    }
 
-@media (max-width: 560px) {
-  .topbar { padding-top: 16px; }
-  .hero { padding-top: 24px; padding-bottom: 32px; }
-  .hero h1 {
-    font-size: clamp(2rem, 9vw, 2.75rem);
-    max-width: calc(100% - 24px);
-  }
-  .waitlist-fields {
-    flex-direction: column;
-    border-radius: var(--radius);
-    gap: 8px;
-  }
-  .waitlist input[type="email"],
-  .waitlist button[type="submit"] {
-    width: 100%;
-    border-radius: var(--radius-sm);
-  }
-  .waitlist button[type="submit"] {
-    padding: 14px 22px;
-  }
-  .features {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding-bottom: 48px;
-  }
-  .card { padding: 22px 20px; }
-}
+    .stage.collapsed .cell {
+      opacity: 0;
+      pointer-events: none;
+    }
 
-@media (prefers-reduced-motion: reduce) {
-  .card { transition: none; }
-  .card:hover { transform: none; }
-  .waitlist button[type="submit"] { transition: none; }
-}
-</style>
+    .stage.collapsed .cell.active-chosen {
+      opacity: 1;
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 180px;
+      height: 56px;
+      transform: translateX(-50%);
+      pointer-events: auto;
+      color: var(--color-terracotta);
+      font-weight: 700;
+    }
+
+    /* Mobile Adjustments */
+    @media (max-width: 768px) {
+      header { padding: 20px 24px 0; }
+      .meta { display: none; }
+      h1 { font-size: clamp(36px, 8vw, 48px); }
+      .title-wrapper { top: 12%; }
+      .waitlist-form-container { bottom: 100px; }
+      .controller { bottom: 24px; height: 110px; }
+      .cells { grid-template-columns: repeat(2, 1fr); }
+      .cell-label { grid-column: 1 / -1; }
+      .capsule { display: none; }
+    }
+  </style>
 </head>
 <body>
-<canvas id="bg-canvas" aria-hidden="true"></canvas>
-<div class="ambient" aria-hidden="true"></div>
-<div class="vignette" aria-hidden="true"></div>
 
-<div class="page">
-  <header class="topbar">
-    <a class="brand" href="/" aria-label="Sober Social home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span class="brand-name">Sober Social</span>
-    </a>
-    <span class="badge">Early Access</span>
-  </header>
+  <div class="stage" id="stage">
 
-  <main class="hero">
-    <p class="hero-eyebrow">Clear-minded dating</p>
-    <h1>Clear minds. <em>Real chemistry.</em></h1>
-    <p class="hero-sub">
-      Intentional connection for people who want presence over noise —
-      sober, thoughtful, and genuinely present.
-    </p>
+    <!-- 8 Persistent R2 Remote Video Streams -->
+    <video id="vid-real-fwd" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-1.mp4"></video>
+    <video id="vid-real-rev" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-1-reverse.mp4"></video>
+    <video id="vid-vibe-fwd" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-2.mp4"></video>
+    <video id="vid-vibe-rev" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-2-reverse.mp4"></video>
+    <video id="vid-match-fwd" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-3.mp4"></video>
+    <video id="vid-match-rev" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-3-reverse.mp4"></video>
+    <video id="vid-vip-fwd" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-4.mp4"></video>
+    <video id="vid-vip-rev" class="media" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-4-reverse.mp4"></video>
 
-    <form class="waitlist" id="waitlistForm" novalidate>
-      <div class="waitlist-fields">
-        <label class="visually-hidden" for="emailInput">Email address</label>
-        <input
-          type="email"
-          id="emailInput"
-          name="email"
-          required
-          autocomplete="email"
-          placeholder="Enter your email"
-          aria-describedby="waitlistError"
-        />
-        <button type="submit" id="submitBtn">Claim Early Access</button>
+    <!-- Navigation -->
+    <header>
+      <a href="#" class="brand">
+        <svg width="28" height="24" viewBox="0 0 40 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 2H20L12 18H4V2Z" fill="#F5EFE0"/>
+          <path d="M12 18V30M6 30H18" stroke="#F5EFE0" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M36 2H20L28 18H36V2Z" fill="#C46231"/>
+          <path d="M28 18V30M22 30H34" stroke="#C46231" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-title">Sober Social</span>
+      </a>
+      
+      <div class="meta">
+        <span>Dating Reimagined</span>
+        <span>•</span>
+        <span>Early Access</span>
       </div>
-      <div class="waitlist-success" id="waitlistSuccess" role="status">You're on the list!</div>
-      <div class="waitlist-error" id="waitlistError" role="alert"></div>
-    </form>
-    <p class="waitlist-note">No spam. Just an invite when your circle opens.</p>
-  </main>
 
-  <section class="features" aria-label="What makes Sober Social different">
-    <article class="card">
-      <div class="card-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+      <a href="#waitlist" class="btn-header" id="btn-header-join">Join Waitlist</a>
+    </header>
+
+    <!-- Hero Title -->
+    <main class="hero">
+      <div class="title-wrapper">
+        <h1>
+          <span>Unlock</span> <span>a</span> <span>New</span> <span>World</span> <span>of</span> <span>Connection.</span>
+        </h1>
       </div>
-      <h3>Clarity Match</h3>
-      <p>Profiles built around values and presence — not endless swipes or spectacle.</p>
-    </article>
-    <article class="card">
-      <div class="card-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
+
+      <div class="waitlist-form-container" id="waitlist">
+        <form class="waitlist-form" id="waitlist-form">
+          <input type="email" required placeholder="Enter your email" class="waitlist-input" id="waitlist-email" />
+          <button type="submit" class="waitlist-submit" id="waitlist-btn">Get Access</button>
+        </form>
+        <div class="waitlist-message" id="waitlist-message"></div>
       </div>
-      <h3>Real Chemistry</h3>
-      <p>Space for honest conversation and chemistry that grows from clarity, not chaos.</p>
-    </article>
-    <article class="card">
-      <div class="card-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M4 12h16"/><path d="M12 4v16"/><circle cx="12" cy="12" r="8"/></svg>
+    </main>
+
+    <!-- Controller Bar -->
+    <nav class="controller" id="controller">
+      <div class="track"></div>
+      <div class="capsule" id="capsule"></div>
+      <div class="cells">
+        <div class="cell cell-label">Select state →</div>
+        <button class="cell" data-index="1" data-key="vibeCheck">Vibe Check</button>
+        <button class="cell" data-index="2" data-key="smartMatch">Smart Match</button>
+        <button class="cell" data-index="3" data-key="realConnections">Real Connections</button>
+        <button class="cell" data-index="4" data-key="vipAccess">VIP Access</button>
       </div>
-      <h3>Mindful Dating</h3>
-      <p>Tools that encourage pace, intention, and showing up as your clearest self.</p>
-    </article>
-    <article class="card">
-      <div class="card-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><circle cx="9" cy="10" r="3"/><circle cx="16" cy="11" r="2.5"/><path d="M3.5 19c.8-3 3-5 5.5-5s4.7 2 5.5 5"/><path d="M13 19c.4-2 1.8-3.5 3.5-3.5 1.4 0 2.6 1 3.2 2.5"/></svg>
-      </div>
-      <h3>Early Circle</h3>
-      <p>Join a smaller founding group shaping a calmer way to meet and connect.</p>
-    </article>
-  </section>
+    </nav>
 
-  <footer class="footer">© Sober Social · Early Access</footer>
-</div>
+  </div>
 
-<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-<script>
-(function () {
-  'use strict';
+  <script>
+    (function () {
+      'use strict';
 
-  var SUPABASE_WAITLIST = 'https://zyeddmxfbolbrmcjvjvc.supabase.co/rest/v1/waitlist';
-  var WELCOME_API = '/api/waitlist-welcome';
-  var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5ZWRkbXhmYm9sYnJtY2p2anZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NzM3NjAsImV4cCI6MjEwNTA0OTc2MH0.ccVuLTOQtOmu-y9I4xCeW1b91dPGb3CRZfiooPGNiSc';
+      var mediaMap = {
+        vibeCheck: { fwd: document.getElementById('vid-vibe-fwd'), rev: document.getElementById('vid-vibe-rev'), fwdHold: 0.08, revHold: 0.18 },
+        smartMatch: { fwd: document.getElementById('vid-match-fwd'), rev: document.getElementById('vid-match-rev'), fwdHold: 0.08, revHold: 0.08 },
+        realConnections: { fwd: document.getElementById('vid-real-fwd'), rev: document.getElementById('vid-real-rev'), fwdHold: 0.08, revHold: 0.08 },
+        vipAccess: { fwd: document.getElementById('vid-vip-fwd'), rev: document.getElementById('vid-vip-rev'), fwdHold: 0.08, revHold: 0.08 }
+      };
 
-  /* ---------- Waitlist form ---------- */
-  var form = document.getElementById('waitlistForm');
-  var input = document.getElementById('emailInput');
-  var errEl = document.getElementById('waitlistError');
-  var submitBtn = document.getElementById('submitBtn');
+      var stage = document.getElementById('stage');
+      var controller = document.getElementById('controller');
+      var capsule = document.getElementById('capsule');
+      var buttons = document.querySelectorAll('.cell[data-key]');
+      var form = document.getElementById('waitlist-form');
+      var emailInput = document.getElementById('waitlist-email');
+      var submitBtn = document.getElementById('waitlist-btn');
+      var messageBox = document.getElementById('waitlist-message');
 
-  function showError(msg) {
-    errEl.textContent = msg || '';
-  }
+      var currentState = {
+        scene: 'base',
+        busy: false,
+        activeVid: mediaMap.realConnections.fwd
+      };
 
-  function fireWelcome(email) {
-    try {
-      fetch(WELCOME_API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email })
-      }).catch(function () { /* ignore */ });
-    } catch (e) { /* ignore */ }
-  }
+      currentState.activeVid.classList.add('active');
+      currentState.activeVid.currentTime = 0;
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    showError('');
-    var email = (input.value || '').trim().toLowerCase();
-
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showError('Please enter a valid email.');
-      input.focus();
-      return;
-    }
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Joining…';
-
-    fetch(SUPABASE_WAITLIST, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': ANON_KEY,
-        'Authorization': 'Bearer ' + ANON_KEY,
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({ email: email })
-    })
-      .then(function (res) {
-        if (res.ok || res.status === 409) {
-          form.classList.add('success-mode');
-          fireWelcome(email);
-          return;
-        }
-        return res.text().then(function (t) {
-          throw new Error(t || ('HTTP ' + res.status));
-        });
-      })
-      .catch(function (err) {
-        if (err && err.message && err.message.indexOf('Failed to fetch') !== -1) {
-          showError('Cannot reach waitlist server. Please try again soon.');
-        } else {
-          showError('Something went wrong. Please try again.');
-        }
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Claim Early Access';
-      });
-  });
-
-  /* ---------- Three.js ambient scene ---------- */
-  var canvas = document.getElementById('bg-canvas');
-  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (!window.THREE || reduceMotion) {
-    canvas.style.display = 'none';
-    return;
-  }
-
-  var THREE = window.THREE;
-  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setClearColor(0x000000, 0);
-
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-  camera.position.z = 8;
-
-  // Soft floating orbs
-  var orbGroup = new THREE.Group();
-  scene.add(orbGroup);
-
-  var orbDefs = [
-    { r: 1.35, x: -2.2, y: 0.8, z: -1.5, color: 0xd4c4a8, opacity: 0.18 },
-    { r: 0.9,  x: 2.4,  y: -0.6, z: -0.8, color: 0x8a9a88, opacity: 0.16 },
-    { r: 0.55, x: 0.3,  y: 1.6,  z: 0.5,  color: 0xe8dcc8, opacity: 0.22 },
-    { r: 0.7,  x: -1.0, y: -1.4, z: 0.2,  color: 0x6a8a84, opacity: 0.14 },
-    { r: 0.4,  x: 1.6,  y: 1.2,  z: -2.0, color: 0xd4c4a8, opacity: 0.2 }
-  ];
-
-  var orbs = [];
-  for (var i = 0; i < orbDefs.length; i++) {
-    var d = orbDefs[i];
-    var geo = new THREE.SphereGeometry(d.r, 48, 48);
-    var mat = new THREE.MeshBasicMaterial({
-      color: d.color,
-      transparent: true,
-      opacity: d.opacity,
-      depthWrite: false
-    });
-    var mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(d.x, d.y, d.z);
-    mesh.userData = {
-      baseX: d.x, baseY: d.y, baseZ: d.z,
-      phase: Math.random() * Math.PI * 2,
-      speed: 0.15 + Math.random() * 0.2
-    };
-    orbGroup.add(mesh);
-    orbs.push(mesh);
-  }
-
-  // Connected particle field
-  var PARTICLE_COUNT = 80;
-  var positions = new Float32Array(PARTICLE_COUNT * 3);
-  var particleData = [];
-  for (var p = 0; p < PARTICLE_COUNT; p++) {
-    var px = (Math.random() - 0.5) * 14;
-    var py = (Math.random() - 0.5) * 10;
-    var pz = (Math.random() - 0.5) * 8 - 1;
-    positions[p * 3] = px;
-    positions[p * 3 + 1] = py;
-    positions[p * 3 + 2] = pz;
-    particleData.push({
-      x: px, y: py, z: pz,
-      vx: (Math.random() - 0.5) * 0.004,
-      vy: (Math.random() - 0.5) * 0.003,
-      vz: (Math.random() - 0.5) * 0.002
-    });
-  }
-
-  var pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  var pMat = new THREE.PointsMaterial({
-    color: 0xd4c4a8,
-    size: 0.045,
-    transparent: true,
-    opacity: 0.55,
-    depthWrite: false,
-    sizeAttenuation: true
-  });
-  var points = new THREE.Points(pGeo, pMat);
-  scene.add(points);
-
-  // Connection lines (updated each frame for nearby pairs)
-  var maxLinks = 60;
-  var linePositions = new Float32Array(maxLinks * 6);
-  var lineGeo = new THREE.BufferGeometry();
-  lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
-  var lineMat = new THREE.LineBasicMaterial({
-    color: 0x8a9a88,
-    transparent: true,
-    opacity: 0.18,
-    depthWrite: false
-  });
-  var lines = new THREE.LineSegments(lineGeo, lineMat);
-  scene.add(lines);
-
-  var mouseX = 0;
-  var mouseY = 0;
-  window.addEventListener('pointermove', function (ev) {
-    mouseX = (ev.clientX / window.innerWidth - 0.5) * 0.6;
-    mouseY = (ev.clientY / window.innerHeight - 0.5) * 0.4;
-  }, { passive: true });
-
-  function resize() {
-    var w = window.innerWidth;
-    var h = window.innerHeight;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-  }
-  window.addEventListener('resize', resize, { passive: true });
-  resize();
-
-  var clock = new THREE.Clock();
-  var running = true;
-
-  document.addEventListener('visibilitychange', function () {
-    running = !document.hidden;
-    if (running) clock.getDelta();
-  });
-
-  function animate() {
-    requestAnimationFrame(animate);
-    if (!running) return;
-
-    var t = clock.getElapsedTime();
-
-    for (var o = 0; o < orbs.length; o++) {
-      var mesh = orbs[o];
-      var u = mesh.userData;
-      mesh.position.x = u.baseX + Math.sin(t * u.speed + u.phase) * 0.35;
-      mesh.position.y = u.baseY + Math.cos(t * u.speed * 0.85 + u.phase) * 0.28;
-      mesh.position.z = u.baseZ + Math.sin(t * u.speed * 0.5 + u.phase) * 0.2;
-    }
-
-    var posAttr = pGeo.attributes.position;
-    var arr = posAttr.array;
-    for (var i = 0; i < PARTICLE_COUNT; i++) {
-      var pd = particleData[i];
-      pd.x += pd.vx;
-      pd.y += pd.vy;
-      pd.z += pd.vz;
-      if (pd.x > 7 || pd.x < -7) pd.vx *= -1;
-      if (pd.y > 5 || pd.y < -5) pd.vy *= -1;
-      if (pd.z > 3 || pd.z < -5) pd.vz *= -1;
-      arr[i * 3] = pd.x;
-      arr[i * 3 + 1] = pd.y;
-      arr[i * 3 + 2] = pd.z;
-    }
-    posAttr.needsUpdate = true;
-
-    // Rebuild soft connections
-    var linkCount = 0;
-    var linkDist = 2.4;
-    var linkDistSq = linkDist * linkDist;
-    for (var a = 0; a < PARTICLE_COUNT && linkCount < maxLinks; a++) {
-      for (var b = a + 1; b < PARTICLE_COUNT && linkCount < maxLinks; b++) {
-        var dx = particleData[a].x - particleData[b].x;
-        var dy = particleData[a].y - particleData[b].y;
-        var dz = particleData[a].z - particleData[b].z;
-        var distSq = dx * dx + dy * dy + dz * dz;
-        if (distSq < linkDistSq) {
-          var li = linkCount * 6;
-          linePositions[li] = particleData[a].x;
-          linePositions[li + 1] = particleData[a].y;
-          linePositions[li + 2] = particleData[a].z;
-          linePositions[li + 3] = particleData[b].x;
-          linePositions[li + 4] = particleData[b].y;
-          linePositions[li + 5] = particleData[b].z;
-          linkCount++;
-        }
+      function setCapsulePos(index) {
+        var positions = [
+          { left: '3px', width: 'calc(20% - 3px)' },
+          { left: '20%', width: '20%' },
+          { left: '40%', width: '20%' },
+          { left: '60%', width: '20%' },
+          { left: '80%', width: 'calc(20% - 3px)' }
+        ];
+        var pos = positions[index] || positions[0];
+        capsule.style.setProperty('--cap-left', pos.left);
+        capsule.style.setProperty('--cap-width', pos.width);
       }
-    }
-    // Zero unused
-    for (var z = linkCount * 6; z < linePositions.length; z++) {
-      linePositions[z] = 0;
-    }
-    lineGeo.attributes.position.needsUpdate = true;
-    lineGeo.setDrawRange(0, linkCount * 2);
 
-    camera.position.x += (mouseX - camera.position.x) * 0.03;
-    camera.position.y += (-mouseY - camera.position.y) * 0.03;
-    camera.lookAt(0, 0, 0);
+      buttons.forEach(function (btn) {
+        btn.addEventListener('mouseenter', function () {
+          if (currentState.scene === 'base' && !currentState.busy) {
+            setCapsulePos(parseInt(btn.getAttribute('data-index'), 10));
+          }
+        });
+      });
 
-    renderer.render(scene, camera);
-  }
+      controller.addEventListener('mouseleave', function () {
+        if (currentState.scene === 'base' && !currentState.busy) {
+          setCapsulePos(0);
+        }
+      });
 
-  animate();
-})();
-</script>
+      function playTransition(key, isReverse) {
+        if (currentState.busy) return;
+        currentState.busy = true;
+
+        var map = mediaMap[key];
+        var targetVid = isReverse ? map.rev : map.fwd;
+        var holdTime = isReverse ? map.revHold : map.fwdHold;
+
+        targetVid.currentTime = 0;
+
+        targetVid.play().then(function () {
+          currentState.activeVid.classList.remove('active');
+          currentState.activeVid.pause();
+
+          targetVid.classList.add('active');
+          currentState.activeVid = targetVid;
+
+          if (!isReverse) {
+            stage.classList.add('title-hidden');
+            stage.classList.add('collapsed');
+          } else {
+            stage.classList.remove('collapsed');
+          }
+
+          var checkHold = setInterval(function () {
+            if (targetVid.duration && (targetVid.duration - targetVid.currentTime) <= holdTime) {
+              targetVid.pause();
+              clearInterval(checkHold);
+              currentState.busy = false;
+
+              if (isReverse) {
+                currentState.scene = 'base';
+                stage.classList.remove('title-hidden');
+                setCapsulePos(0);
+                buttons.forEach(function (b) {
+                  b.classList.remove('active-chosen');
+                  b.textContent = b.getAttribute('data-original-text') || b.textContent;
+                });
+              } else {
+                currentState.scene = key;
+              }
+            }
+          }, 30);
+
+        }).catch(function (err) {
+          console.error(err);
+          currentState.busy = false;
+        });
+      }
+
+      buttons.forEach(function (btn) {
+        btn.setAttribute('data-original-text', btn.textContent);
+        btn.addEventListener('click', function () {
+          var key = btn.getAttribute('data-key');
+          if (currentState.scene === 'base') {
+            btn.classList.add('active-chosen');
+            btn.textContent = '✕ Reset';
+            playTransition(key, false);
+          } else if (currentState.scene === key) {
+            playTransition(key, true);
+          }
+        });
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = emailInput.value.trim();
+        if (!email) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Joining...';
+
+        setTimeout(function() {
+          form.style.display = 'none';
+          messageBox.textContent = "You're on the list! Welcome.";
+          messageBox.classList.add('active');
+        }, 600);
+      });
+
+    })();
+  </script>
 </body>
 </html>
