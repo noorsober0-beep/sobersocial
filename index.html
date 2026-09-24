@@ -808,7 +808,8 @@
       var vipPrompt = document.getElementById('vip-prompt');
       var vipPinned = false;
       var supabaseUrl = 'https://zyeddmxfbolbrmcjvjvc.supabase.co';
-      var supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5ZWRkbXhmYm9sYnJtY2p2anZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NzM3NjAsImV4cCI6MjEwNTA0OTc2MH0.ccVuLTOQtOmu-y9I4xCeW1b91dPGb3CRZfiooPGNiSc';
+      var waitlistFunctionUrl = supabaseUrl + '/functions/v1/waitlist-welcome';
+      var supabaseAnonKey =  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5ZWRkbXhmYm9sYnJtY2p2anZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NzM3NjAsImV4cCI6MjEwNTA0OTc2MH0.ccVuLTOQtOmu-y9I4xCeW1b91dPGb3CRZfiooPGNiSc';
 
       var sceneMeta = {
         base: { name: 'base', visibleId: 'video-1', forwardId: null, reverseId: null, duration: 0 },
@@ -1115,13 +1116,12 @@
         submitButton.textContent = 'Joining…';
         announce('Submitting your email.');
 
-        fetch(supabaseUrl + '/rest/v1/waitlist', {
+        fetch(waitlistFunctionUrl, {
           method: 'POST',
           headers: {
             'apikey': supabaseAnonKey,
             'Authorization': 'Bearer ' + supabaseAnonKey,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=minimal'
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({ email: email })
         }).then(function (response) {
