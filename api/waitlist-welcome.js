@@ -51,7 +51,7 @@ function welcomeHtml(email) {
 </html>`;
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -87,25 +87,29 @@ module.exports = async function handler(req, res) {
     `We'll email ${email} when early access opens. No spam, just the invite.\n\n` +
     `https://sobersocial.in\n\n— Sober Social`;
 
-  const r = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + apiKey,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: FROM,
-      to: [email],
-      subject: "You're on the Sober Social early list",
-      html: welcomeHtml(email),
-      text,
-    }),
-  });
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: FROM,
+        to: [email],
+        subject: "You're on the Sober Social early list",
+        html: welcomeHtml(email),
+        text,
+      }),
+    });
 
-  const payload = await r.json().catch(() => ({}));
-  if (!r.ok) {
-    return res.status(502).json({ error: 'Resend failed', details: payload });
+    const payload = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      return res.status(502).json({ error: 'Resend failed', details: payload });
+    }
+
+    return res.status(200).json({ ok: true, id: payload.id || null });
+  } catch (err) {
+    return res.status(500).json({ error: 'Welcome email failed' });
   }
-
-  return res.status(200).json({ ok: true, id: payload.id || null });
-};
+}
