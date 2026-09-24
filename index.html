@@ -807,6 +807,8 @@
       var vipButton = document.querySelector('[data-scene="vipAccess"]');
       var vipPrompt = document.getElementById('vip-prompt');
       var vipPinned = false;
+      var supabaseUrl = 'https://zyeddmxfbolbrmcjvjvc.supabase.co';
+      var supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5ZWRkbXhmYm9sYnJtY2p2anZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NzM3NjAsImV4cCI6MjEwNTA0OTc2MH0.ccVuLTOQtOmu-y9I4xCeW1b91dPGb3CRZfiooPGNiSc';
 
       var sceneMeta = {
         base: { name: 'base', visibleId: 'video-1', forwardId: null, reverseId: null, duration: 0 },
@@ -1108,28 +1110,47 @@
           return;
         }
 
-        waitlistForm.classList.add('success');
-        waitlistForm.querySelector('button').textContent = 'You’re on the list!';
-        announce('You are on the list.');
-        setNotice('You’re on the list!');
+        var submitButton = waitlistForm.querySelector('button');
+        submitButton.disabled = true;
+        submitButton.textContent = 'Joining…';
+        announce('Submitting your email.');
 
-        var supabaseUrl = window.SUPABASE_URL || 'https://example.supabase.co';
-        var supabaseAnonKey = window.SUPABASE_ANON_KEY || '';
+        fetch(supabaseUrl + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseAnonKey,
+            'Authorization': 'Bearer ' + supabaseAnonKey,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email: email })
+        }).then(function (response) {
+          if (!response.ok) {
+            return response.text().then(function (details) {
+              var error = new Error('Waitlist request failed with status ' + response.status);
+              error.details = details;
+              throw error;
+            });
+          }
 
-        if (supabaseAnonKey) {
-          fetch(supabaseUrl + '/rest/v1/waitlist', {
-            method: 'POST',
-            headers: {
-              'apikey': supabaseAnonKey,
-              'Authorization': 'Bearer ' + supabaseAnonKey,
-              'Content-Type': 'application/json',
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify({ email: email })
-          }).catch(function () {
-            announce('Submission queued locally.');
-          });
-        }
+          waitlistForm.classList.add('success');
+          submitButton.textContent = 'You’re on the list!';
+          announce('You are on the list.');
+          setNotice('You’re on the list!');
+        }).catch(function (error) {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Claim Early Access';
+          if (error && error.message.indexOf('status 409') !== -1) {
+            announce('This email is already on the list.');
+            setNotice('You’re already on the list.');
+          } else {
+            announce('We could not save your email. Please try again.');
+            setNotice('Something went wrong. Please try again.');
+          }
+          if (window.console && window.console.error) {
+            window.console.error('Waitlist submission failed.', error);
+          }
+        });
       });
 
       document.addEventListener('visibilitychange', function () {
