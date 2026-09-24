@@ -469,30 +469,16 @@
     .stage.is-transitioning .cell,
     .stage.is-resetting .cell,
     .stage.is-working .cell {
-      opacity: 0;
-      filter: blur(10px);
-      transform: scale(0.94);
-      pointer-events: none;
-    }
-
-    .stage.is-transitioning .control-btn.reset {
-      opacity: 1;
-      filter: blur(0);
-      transform: translate(0, 0) scale(1);
-    }
-
-    .stage.is-selected .cell:not(.static-label) {
       opacity: 1;
       filter: blur(0);
       transform: scale(1);
       pointer-events: auto;
     }
 
-    .stage.is-selected .control-btn.reset {
-      opacity: 1;
-      filter: blur(0);
-      transform: scale(1);
-      transition: opacity 520ms var(--retake-ease), filter 520ms var(--retake-ease), transform 520ms var(--retake-ease);
+    .control-btn.active {
+      color: #0b1a26;
+      background: rgba(246, 251, 255, 0.78);
+      box-shadow: 0 5px 16px rgba(4, 24, 43, 0.16);
     }
 
     .stage.is-hidden .track {
@@ -588,12 +574,20 @@
       }
 
       .meta {
+        min-width: 0;
+        overflow: hidden;
+        margin-left: 12px;
         gap: 12px;
         font-size: 12px;
       }
 
       .meta .launch-label {
         display: none;
+      }
+
+      .meta span {
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .join-btn {
@@ -606,6 +600,7 @@
         top: 32%;
         width: calc(100vw - 40px);
         font-size: clamp(42px, 12vw, 58px);
+        line-height: 0.9;
         white-space: normal;
       }
 
@@ -616,7 +611,7 @@
       }
 
       .waitlist-form {
-        top: calc(75% + 38px);
+        top: calc(75% + 34px);
         width: calc(100vw - 40px);
         flex-direction: column;
         border-radius: 24px;
@@ -664,19 +659,24 @@
         pointer-events: none;
       }
 
+      .control-btn.active {
+        color: #fff;
+        background: rgba(246, 251, 255, 0.2);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34);
+      }
+
       .stage.is-collapsing .capsule,
       .stage.is-selected .capsule,
       .stage.is-resetting .capsule {
         opacity: 1;
-        left: 50%;
-        top: 4vh;
-        top: 4dvh;
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-        width: 196px;
-        height: 64px;
+        left: var(--cap-left);
+        top: -1px;
+        -webkit-transform: none;
+        transform: none;
+        width: var(--cap-width);
+        height: 72px;
         border-radius: 999px;
-        background: rgb(246 251 255 / 0.18);
+        background: rgb(246 251 255 / 0.24);
       }
     }
 
@@ -734,8 +734,10 @@
     <header class="header">
       <a href="#" class="brand" aria-label="Home">
         <svg viewBox="0 0 75 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M11.4 18.3c-2.5-1.9-4.1-4.9-4.1-8.2C7.3 7 10.1 4 14 4c3.7 0 5.8 1.9 6.5 4 1.4-1.8 3.9-3 6.8-3 4.5 0 8 3.1 8 8 0 1.8-.7 3.4-1.7 4.7l-1.8 1.9c-1.9 2.1-4.6 3.5-7.7 3.5-2.6 0-4.9-.9-6.6-2.4l-1.5-1.6c-.6-.7-1.5-1.4-2.5-1.9zm8.7-6.7c-.4 1.1-.6 2.3-.6 3.5 0 2.1.7 4.3 2.4 5.7 1.2 1 2.8 1.5 4.5 1.5 2.8 0 5.3-1.6 6.5-4.1l.9-.7c.5-.4.8-1.1.8-1.8 0-1.5-1.2-2.7-2.8-2.7-1.2 0-2.1.7-2.9 1.5-.8.9-1.7 1.4-3 1.4-1.6 0-2.9-1.1-3.6-2.3zm-8.4 8.8c-1.3-1.1-2.1-2.7-2.1-4.4 0-2.3 1.5-4.4 3.9-5.2.5.9 1.4 1.6 2.5 2.1.9.4 1.9.6 3 .6l-1.8 1.6c-1.5 1.4-3.2 2.6-5.5 3.3zM56.5 11.8c0-2.2 1.9-4.1 4.1-4.1 2.3 0 4.2 1.9 4.2 4.1 0 2.2-1.9 4-4.2 4-2.2 0-4.1-1.8-4.1-4zm-9.2 0c0-2.2 1.9-4.1 4.1-4.1 2.2 0 4.1 1.9 4.1 4.1 0 2.2-1.9 4-4.1 4-2.2 0-4.1-1.8-4.1-4zM31.2 5.7c-4.2 0-7.7 3.4-7.7 7.6 0 4.2 3.5 7.6 7.7 7.6 4.2 0 7.7-3.4 7.7-7.6 0-4.2-3.5-7.6-7.7-7.6zm0 4.2c1.9 0 3.5 1.6 3.5 3.4 0 1.8-1.6 3.4-3.5 3.4s-3.5-1.6-3.5-3.4c0-1.8 1.6-3.4 3.5-3.4z" fill="white"/>
-          <path d="M6.6 24.2c2.2-3.6 6.3-5.5 11.2-5.5 5.1 0 9.1 2.2 11.5 5.9l-2.5 1.7c-1.8-2.7-4.8-4.1-9-4.1s-7.5 1.6-9.5 4.5l-1.7-1.5z" fill="white" opacity="0.75"/>
+          <path d="M6 8.5h25l-7.2 12.3v5.7h-2.6v-5.7L14 8.5H6Z" fill="rgba(255,255,255,.16)" stroke="white" stroke-opacity=".82" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M44 8.5h25l-7.2 12.3v5.7h-2.6v-5.7L52 8.5h-8Z" fill="rgba(255,255,255,.16)" stroke="white" stroke-opacity=".82" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M31 14.5h13" fill="none" stroke="white" stroke-opacity=".62" stroke-width="1.4"/>
+          <path d="M4 27.5h27M44 27.5h27" stroke="white" stroke-opacity=".58" stroke-width="2.4" stroke-linecap="round"/>
         </svg>
       </a>
       <div class="meta" aria-label="Brand metadata">
@@ -780,7 +782,8 @@
         selectedScene: null,
         activeVideo: 'video-1',
         pendingTarget: null,
-        pendingIsBase: false
+        pendingIsBase: false,
+        transitionId: 0
       };
 
       var buttonByScene = {};
@@ -842,14 +845,7 @@
       function updateControllerSelection(targetScene) {
         Object.keys(buttonByScene).forEach(function (sceneKey) {
           var button = buttonByScene[sceneKey];
-          var isCurrent = targetScene && sceneKey === targetScene;
-          if (button.textContent === 'Reset') {
-            button.textContent = sceneMeta[sceneKey].label || sceneKey;
-          }
-          button.classList.toggle('reset', isCurrent && state.scene === sceneKey);
-          if (isCurrent && state.scene === sceneKey) {
-            button.textContent = 'Reset';
-          }
+          button.classList.toggle('active', !!targetScene && sceneKey === targetScene);
         });
       }
 
@@ -884,7 +880,7 @@
       function setControlDisabled(disabled) {
         labelButtons.forEach(function (button) {
           button.disabled = disabled;
-          button.style.pointerEvents = disabled ? 'none' : 'auto';
+          button.style.pointerEvents = 'auto';
         });
       }
 
@@ -913,7 +909,7 @@
       }
 
       function beginTransition(sceneKey) {
-        if (state.locked || state.scene !== 'base' || state.playback !== 'ready') {
+        if (state.scene === sceneKey && state.playback !== 'starting') {
           return;
         }
 
@@ -923,187 +919,85 @@
 
         if (!targetVideo) return;
 
+        var transitionId = state.transitionId + 1;
+        state.transitionId = transitionId;
         state.locked = true;
         state.selectedScene = sceneKey;
         state.direction = 'forward';
         state.playback = 'starting';
         state.pendingTarget = sceneKey;
-        setControlDisabled(true);
-        stage.classList.add('is-transitioning', 'is-collapsing');
-        stage.classList.remove('is-resetting');
-        setTitleHidden(true);
+        setControlDisabled(false);
+        stage.classList.add('is-transitioning');
+        stage.classList.remove('is-resetting', 'is-collapsing', 'is-selected', 'is-working');
+        setTitleHidden(sceneKey !== 'base');
         setNotice('Transitioning into ' + sceneMeta[sceneKey].label + '.');
         announce('Opening ' + sceneMeta[sceneKey].label + ' scene.');
+        updateControllerSelection(sceneKey);
+        applyCapsulePosition(
+          sceneKey === 'vibeCheck' ? '20%' :
+          sceneKey === 'smartMatch' ? '40%' :
+          sceneKey === 'realConnections' ? '60%' : '80%',
+          '20%'
+        );
 
-        applyCapsulePosition('calc(50% - 100px)', '200px');
-        var trackEl = controller.querySelector('.track');
-        if (trackEl) {
-          trackEl.style.left = 'calc(50% - 96px)';
-          trackEl.style.width = '192px';
-        }
-
-        var targetLabel = buttonByScene[sceneKey];
-        if (targetLabel) {
-          targetLabel.style.transitionDelay = '0ms';
-          targetLabel.style.opacity = '1';
-          targetLabel.style.filter = 'blur(0)';
-          targetLabel.style.transform = 'translate(0, 0) scale(1)';
-        }
-
-        if (currentVideo) {
+        if (currentVideo && currentVideo !== targetVideo) {
           currentVideo.pause();
         }
 
-        var markVisible = function () {
-          setVisibleVideo(targetVideoId);
+        var finish = false;
+        var finishTransition = function () {
+          if (finish || transitionId !== state.transitionId) return;
+          finish = true;
+          targetVideo.pause();
+          if (targetVideo.duration && targetVideo.currentTime < targetVideo.duration - 0.12) {
+            targetVideo.currentTime = Math.max(0, targetVideo.duration - 0.12);
+          }
+          state.scene = sceneKey;
           state.activeVideo = targetVideoId;
-          targetVideo.play().catch(function () {
-            announce('Playback could not start. Please retry.');
-            setStatus('Error');
-            setNotice('Retry');
-            stage.classList.remove('is-collapsing', 'is-transitioning');
-            setControlDisabled(false);
-            state.locked = false;
-            state.playback = 'error';
-          });
+          state.locked = false;
+          state.playback = 'ready';
+          stage.classList.remove('is-transitioning', 'is-working');
+          stage.classList.add('is-selected');
+          setControlDisabled(false);
+          setStatus('Selected');
+          setNotice(sceneMeta[sceneKey].label + ' selected.');
+          announce('Selected ' + sceneMeta[sceneKey].label + '.');
         };
 
         ensureCurrentTimeZero(targetVideo, function () {
           targetVideo.pause();
           targetVideo.muted = true;
-          setVisibleVideo(state.activeVideo || 'video-1');
-          targetVideo.addEventListener('loadeddata', function onReady() {
-            if (targetVideo.readyState >= 2) {
-              targetVideo.removeEventListener('loadeddata', onReady);
-              setTimeout(function () {
-                markVisible();
-                setTimeout(function () {
-                  stage.classList.remove('is-collapsing');
-                  stage.classList.add('is-working');
-                  setStatus('Playing');
-                  targetVideo.addEventListener('timeupdate', function onTimeUpdate() {
-                    var hold = sceneMeta[sceneKey].terminalHold || 0.08;
-                    var endCutoff = Math.max(0, targetVideo.duration - hold);
-                    if (targetVideo.currentTime >= endCutoff && !targetVideo.paused) {
-                      targetVideo.pause();
-                      targetVideo.removeEventListener('timeupdate', onTimeUpdate);
-                      completeSelectedState(sceneKey);
-                    }
-                  });
-                }, 160);
-              }, 150);
-            }
-          }, { once: true });
-
-          targetVideo.load();
+          setVisibleVideo(targetVideoId);
+          state.activeVideo = targetVideoId;
+          var timer = window.setTimeout(finishTransition, ((sceneMeta[sceneKey].duration || 2.1) + 0.35) * 1000);
+          var onEnded = function () {
+            window.clearTimeout(timer);
+            targetVideo.removeEventListener('ended', onEnded);
+            finishTransition();
+          };
+          targetVideo.addEventListener('ended', onEnded);
+          targetVideo.play().then(function () {
+            if (transitionId !== state.transitionId) return;
+            state.playback = 'playing';
+            setStatus('Playing');
+            stage.classList.add('is-working');
+          }).catch(function () {
+            if (transitionId !== state.transitionId) return;
+            window.clearTimeout(timer);
+            targetVideo.removeEventListener('ended', onEnded);
+            targetVideo.load();
+            setStatus('Ready');
+            setNotice('Tap a feature to try again.');
+            announce('Playback could not start.');
+            state.locked = false;
+            state.playback = 'ready';
+            stage.classList.remove('is-transitioning', 'is-working');
+          });
         });
       }
 
       function completeSelectedState(sceneKey) {
-        state.scene = sceneKey;
-        state.playback = 'playing';
-        stage.classList.remove('is-transitioning', 'is-collapsing', 'is-working');
-        stage.classList.add('is-selected');
-        setStatus('Selected');
-        setNotice('Scene selected — choose Reset to return home.');
-        announce('Selected ' + sceneMeta[sceneKey].label + '.');
-        labelButtons.forEach(function (button) {
-          button.disabled = false;
-          button.style.pointerEvents = 'auto';
-        });
-
-        Object.keys(buttonByScene).forEach(function (key) {
-          var button = buttonByScene[key];
-          button.classList.toggle('reset', key === sceneKey);
-          if (key === sceneKey) {
-            button.textContent = 'Reset';
-          } else {
-            button.textContent = sceneMeta[key].label;
-          }
-        });
-
-        state.locked = false;
-        state.playback = 'ready';
-        setControlDisabled(false);
-        state.selectedScene = sceneKey;
-        document.body.style.cursor = 'default';
-      }
-
-      function resetToBase() {
-        if (state.locked || !state.selectedScene || state.scene === 'base') {
-          return;
-        }
-
-        var sceneKey = state.selectedScene;
-        var reverseVideoId = sceneMeta[sceneKey].reverseId;
-        var reverseVideo = getVideoById(reverseVideoId);
-        var currentVideo = getVideoById(state.activeVideo || 'video-1');
-
-        if (!reverseVideo) return;
-
-        state.locked = true;
-        state.direction = 'reverse';
-        state.playback = 'starting';
-        setControlDisabled(true);
-        stage.classList.add('is-resetting');
-        stage.classList.remove('is-selected');
-        stage.classList.add('title-hidden');
-        setNotice('Returning to base scene.');
-        announce('Resetting to base.');
-
-        if (currentVideo) {
-          currentVideo.pause();
-        }
-
-        setVisibleVideo(reverseVideoId);
-        state.activeVideo = reverseVideoId;
-
-        reverseVideo.pause();
-        reverseVideo.currentTime = 0;
-        reverseVideo.muted = true;
-        reverseVideo.play().catch(function () {
-          announce('Reset playback failed.');
-        });
-
-        var reverseHold = sceneMeta[sceneKey].reverseHold || 0.08;
-        var targetDuration = reverseVideo.duration || sceneMeta[sceneKey].duration || 2.08;
-        var cutoff = Math.max(0.2, targetDuration - reverseHold);
-
-        setTimeout(function () {
-          stage.classList.remove('is-resetting');
-          stage.classList.add('is-transitioning');
-          applyCapsulePosition('-5px', 'calc(20% + 5px)');
-          if (controller.querySelector('.track')) {
-            controller.querySelector('.track').style.left = '0';
-            controller.querySelector('.track').style.width = '100%';
-          }
-        }, 120);
-
-        reverseVideo.addEventListener('timeupdate', function onReverseTimeUpdate() {
-          if (reverseVideo.currentTime >= cutoff) {
-            reverseVideo.pause();
-            reverseVideo.removeEventListener('timeupdate', onReverseTimeUpdate);
-            setVisibleVideo('video-1');
-            state.activeVideo = 'video-1';
-            state.scene = 'base';
-            state.selectedScene = null;
-            state.playback = 'ready';
-            state.locked = false;
-            setControlDisabled(false);
-            setTitleHidden(false);
-            stage.classList.remove('is-transitioning', 'is-selected', 'is-collapsing', 'is-working');
-            resetTrackPosition();
-            updateControllerSelection(null);
-            setStatus('Ready');
-            setNotice('A new era of connection is opening.');
-            announce('Returned to base.');
-            Object.keys(buttonByScene).forEach(function (key) {
-              var button = buttonByScene[key];
-              button.textContent = sceneMeta[key].label || button.textContent;
-              button.classList.remove('reset');
-            });
-          }
-        });
+        return;
       }
 
       function handleMouseMove(event) {
@@ -1127,14 +1021,7 @@
       labelButtons.forEach(function (button) {
         button.addEventListener('click', function () {
           var sceneKey = button.dataset.scene;
-          if (state.scene === 'base' && !state.locked) {
-            beginTransition(sceneKey);
-            return;
-          }
-
-          if (state.scene === sceneKey && !state.locked) {
-            resetToBase();
-          }
+          beginTransition(sceneKey);
         });
       });
 
