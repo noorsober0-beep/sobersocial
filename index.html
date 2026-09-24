@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Sober Social — Clear Connection, Early Access</title>
+<title>Sober Social â€” Clear Connection, Early Access</title>
 <meta name="description" content="Sober Social is clear-minded dating for intentional connection. Join the early access waitlist." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -182,7 +182,7 @@ button, input { font-family: inherit; }
   margin: 0 auto 20px;
   overflow-wrap: break-word;
   word-wrap: break-word;
-  /* NEVER nowrap — title must wrap fully on all widths */
+  /* NEVER nowrap â€” title must wrap fully on all widths */
   white-space: normal;
 }
 
@@ -438,7 +438,7 @@ button, input { font-family: inherit; }
     <p class="hero-eyebrow">Clear-minded dating</p>
     <h1>Clear minds. <em>Real chemistry.</em></h1>
     <p class="hero-sub">
-      Intentional connection for people who want presence over noise —
+      Intentional connection for people who want presence over noise â€”
       sober, thoughtful, and genuinely present.
     </p>
 
@@ -456,7 +456,7 @@ button, input { font-family: inherit; }
         />
         <button type="submit" id="submitBtn">Claim Early Access</button>
       </div>
-      <div class="waitlist-success" id="waitlistSuccess" role="status">You’re on the list!</div>
+      <div class="waitlist-success" id="waitlistSuccess" role="status">Youâ€™re on the list!</div>
       <div class="waitlist-error" id="waitlistError" role="alert"></div>
     </form>
     <p class="waitlist-note">No spam. Just an invite when your circle opens.</p>
@@ -468,7 +468,7 @@ button, input { font-family: inherit; }
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
       </div>
       <h3>Clarity Match</h3>
-      <p>Profiles built around values and presence — not endless swipes or spectacle.</p>
+      <p>Profiles built around values and presence â€” not endless swipes or spectacle.</p>
     </article>
     <article class="card">
       <div class="card-icon" aria-hidden="true">
@@ -493,7 +493,7 @@ button, input { font-family: inherit; }
     </article>
   </section>
 
-  <footer class="footer">© Sober Social · Early Access</footer>
+  <footer class="footer">Â© Sober Social Â· Early Access</footer>
 </div>
 
 <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
@@ -502,7 +502,7 @@ button, input { font-family: inherit; }
   'use strict';
 
   var SUPABASE_WAITLIST = 'https://zyeddmxfbolbrmcjvjvc.supabase.co/rest/v1/waitlist';
-  var SUPABASE_WELCOME = 'https://zyeddmxfbolbrmcjvjvc.supabase.co/functions/v1/waitlist-welcome';
+  var WELCOME_API = '/api/waitlist-welcome';
   var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5ZWRkbXhmYm9sYnJtY2p2anZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NzM3NjAsImV4cCI6MjEwNTA0OTc2MH0.ccVuLTOQtOmu-y9I4xCeW1b91dPGb3CRZfiooPGNiSc';
 
   /* ---------- Waitlist form ---------- */
@@ -517,13 +517,9 @@ button, input { font-family: inherit; }
 
   function fireWelcome(email) {
     try {
-      fetch(SUPABASE_WELCOME, {
+      fetch(WELCOME_API, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + ANON_KEY,
-          'apikey': ANON_KEY
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email })
       }).catch(function () { /* ignore */ });
     } catch (e) { /* ignore */ }
@@ -541,7 +537,7 @@ button, input { font-family: inherit; }
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Joining…';
+    submitBtn.textContent = 'Joiningâ€¦';
 
     fetch(SUPABASE_WAITLIST, {
       method: 'POST',
