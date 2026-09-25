@@ -96,12 +96,12 @@
 
     .title {
       position: absolute;
-      top: 32.9%;
+      top: 29%;
       left: 50%;
       -webkit-transform: translateX(-50%);
       transform: translateX(-50%);
       width: min(901px, calc(100vw - 48px));
-      font-size: clamp(52px, 6vw, 88px);
+      font-size: clamp(36px, 4.5vw, 64px);
       font-weight: 500;
       line-height: 0.85;
       letter-spacing: -0.04em;
@@ -676,9 +676,9 @@
       }
 
       .title {
-        top: 32%;
+        top: 30%;
         width: calc(100vw - 40px);
-        font-size: clamp(42px, 12vw, 58px);
+        font-size: clamp(30px, 8vw, 42px);
         line-height: 0.9;
         white-space: normal;
         row-gap: 0.08em;
@@ -757,8 +757,8 @@
     <video class="media" id="video-4-reverse" muted playsinline preload="auto" aria-hidden="true" src="https://pub-80498b2e408f4eef9c7e26871bd9bf65.r2.dev/video-4-reverse.mp4"></video>
 
     <div class="hero">
-      <h1 class="title" aria-label="Unlock a new world of dating.">
-        <span>A</span> <span>real</span> <span>connection</span> <span>always</span> <span>feels</span> <span>inevitable.</span>
+      <h1 class="title" aria-label="Real connection feels inevitable.">
+        <span>Real</span> <span>connection</span> <span>feels</span> <span>inevitable.</span>
       </h1>
       <p class="hero-copy">Dating is broken. We’re rebuilding it from the chemistry up. Get early access before the crowd.</p>
       <form class="waitlist-form" id="waitlist-form" novalidate>
@@ -823,11 +823,11 @@
       };
 
       var headlineText = {
-        base: 'A real connection always feels inevitable.',
-        vibeCheck: 'Unlock a new world of dating.',
-        smartMatch: "Matched by something words can't explain.",
-        realConnections: 'A real connection always feels inevitable.',
-        vipAccess: 'Some desires are only for the invited.'
+        base: 'Real connection feels inevitable.',
+        vibeCheck: 'A new way to date.',
+        smartMatch: 'Matched beyond words.',
+        realConnections: 'Real connection feels inevitable.',
+        vipAccess: 'For the invited only.'
       };
 
       var state = {
@@ -945,20 +945,15 @@
         if (!headline) return;
 
         headline.classList.remove('headline-reveal', 'headline-exit');
-        void headline.offsetWidth;
-        if (!isTransition) {
-          headline.classList.add('headline-reveal');
-          return;
-        }
-
-        headline.classList.add('headline-exit');
-        headlineTimers.push(window.setTimeout(function () {
-          if (!state.scene) return;
+        if (isTransition) {
           renderHeadline(state.scene);
-          headline.classList.remove('headline-exit');
-          void headline.offsetWidth;
-          headline.classList.add('headline-reveal');
-        }, 7000));
+        }
+        void headline.offsetWidth;
+        headline.classList.add('headline-reveal');
+        headlineTimers.push(window.setTimeout(function () {
+          headline.classList.remove('headline-reveal');
+          headline.classList.add('headline-exit');
+        }, 6000));
       }
 
       function setupInitialBaseVideo() {
