@@ -109,6 +109,7 @@
       white-space: nowrap;
       text-shadow: 0 2px 12px rgb(0 0 0 / 0.14);
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: center;
       gap: 0;
@@ -118,23 +119,61 @@
 
     .title span {
       display: inline-block;
-      opacity: 1;
-      filter: blur(0);
-      transform: translateY(0);
-      transition: opacity 900ms var(--retake-ease), filter 900ms var(--retake-ease), transform 900ms var(--retake-ease);
+      margin-right: 0.25em;
+      opacity: 0;
+      filter: blur(14px);
+      transform: translateY(8px);
     }
 
-    .title span:nth-child(1) { transition-delay: 0ms; }
-    .title span:nth-child(2) { transition-delay: 90ms; }
-    .title span:nth-child(3) { transition-delay: 180ms; }
-    .title span:nth-child(4) { transition-delay: 270ms; }
-    .title span:nth-child(5) { transition-delay: 360ms; }
-    .title span:nth-child(6) { transition-delay: 450ms; }
+    .title span:last-child {
+      margin-right: 0;
+    }
 
-    .stage.title-hidden .title span {
-      opacity: 0;
-      filter: blur(12px);
-      transform: translateY(-10px);
+    .title.headline-reveal span {
+      animation: headline-reveal 900ms var(--retake-ease) forwards;
+    }
+
+    .title.headline-exit span {
+      animation: headline-exit 7000ms var(--retake-ease) forwards;
+    }
+
+    .title.headline-reveal span:nth-child(1),
+    .title.headline-exit span:nth-child(1) { animation-delay: 0ms; }
+    .title.headline-reveal span:nth-child(2),
+    .title.headline-exit span:nth-child(2) { animation-delay: 80ms; }
+    .title.headline-reveal span:nth-child(3),
+    .title.headline-exit span:nth-child(3) { animation-delay: 160ms; }
+    .title.headline-reveal span:nth-child(4),
+    .title.headline-exit span:nth-child(4) { animation-delay: 240ms; }
+    .title.headline-reveal span:nth-child(5),
+    .title.headline-exit span:nth-child(5) { animation-delay: 320ms; }
+    .title.headline-reveal span:nth-child(6),
+    .title.headline-exit span:nth-child(6) { animation-delay: 400ms; }
+
+    @keyframes headline-reveal {
+      from {
+        opacity: 0;
+        filter: blur(14px);
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes headline-exit {
+      from {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        filter: blur(14px);
+        transform: translateY(8px);
+      }
     }
 
     .hero-copy {
@@ -642,6 +681,7 @@
         font-size: clamp(42px, 12vw, 58px);
         line-height: 0.9;
         white-space: normal;
+        row-gap: 0.08em;
       }
 
       .hero-copy {
@@ -665,38 +705,24 @@
 
       .controller {
         top: 53%;
-        width: calc(100vw - 40px);
-        height: 156px;
+        width: calc(100vw - 24px);
+        height: 56px;
       }
 
       .track {
         top: 0;
-        height: 156px;
-        border-radius: 28px;
-      }
-
-      .cells {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: 48px 54px 54px;
-      }
-
-      .static-label {
-        grid-column: 1 / -1;
-      }
-
-      .cell {
-        font-size: 16px;
-        border-top: 1px solid rgba(255, 255, 255, 0.12);
-      }
-
-      .cell:not(.static-label):nth-child(2),
-      .cell:not(.static-label):nth-child(3) {
-        border-top: 0;
+        height: 56px;
+        border-radius: 999px;
       }
 
       .controller .capsule {
-        opacity: 0;
-        pointer-events: none;
+        top: 0;
+        height: 56px;
+      }
+
+      .cell {
+        font-size: clamp(11px, 3vw, 15px);
+        padding: 0 4px;
       }
 
       .vip-prompt {
@@ -706,25 +732,6 @@
         text-align: center;
       }
 
-      .control-btn.active {
-        color: #fff;
-        background: rgba(246, 251, 255, 0.2);
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34);
-      }
-
-      .stage.is-collapsing .capsule,
-      .stage.is-selected .capsule,
-      .stage.is-resetting .capsule {
-        opacity: 1;
-        left: var(--cap-left);
-        top: -1px;
-        -webkit-transform: none;
-        transform: none;
-        width: var(--cap-width);
-        height: 72px;
-        border-radius: 999px;
-        background: rgb(246 251 255 / 0.24);
-      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -751,12 +758,7 @@
 
     <div class="hero">
       <h1 class="title" aria-label="Unlock a new world of dating.">
-        <span>Unlock</span>
-        <span>a</span>
-        <span>new</span>
-        <span>world</span>
-        <span>of</span>
-        <span>dating.</span>
+        <span>A</span> <span>real</span> <span>connection</span> <span>always</span> <span>feels</span> <span>inevitable.</span>
       </h1>
       <p class="hero-copy">Dating is broken. We’re rebuilding it from the chemistry up. Get early access before the crowd.</p>
       <form class="waitlist-form" id="waitlist-form" novalidate>
@@ -799,12 +801,14 @@
       var status = document.getElementById('status');
       var notice = document.getElementById('notice');
       var liveRegion = document.getElementById('live-region');
+      var headline = document.querySelector('.title');
       var controller = document.getElementById('controller');
       var capsule = document.getElementById('capsule');
       var labelButtons = Array.prototype.slice.call(document.querySelectorAll('.control-btn'));
       var mediaEls = Array.prototype.slice.call(document.querySelectorAll('.media'));
       var vipButton = document.querySelector('[data-scene="vipAccess"]');
       var vipPrompt = document.getElementById('vip-prompt');
+      var headlineTimers = [];
       var vipPinned = false;
       var supabaseUrl = 'https://zyeddmxfbolbrmcjvjvc.supabase.co';
       var waitlistFunctionUrl = supabaseUrl + '/functions/v1/waitlist-welcome';
@@ -816,6 +820,14 @@
         smartMatch: { name: 'smartMatch', visibleId: 'video-3', forwardId: 'video-3', reverseId: 'video-3-reverse', duration: 2.08, terminalHold: 0.08, reverseHold: 0.08 },
         realConnections: { name: 'realConnections', visibleId: 'video-1', forwardId: 'video-1', reverseId: 'video-1-reverse', duration: 2.08, terminalHold: 0.08, reverseHold: 0.08 },
         vipAccess: { name: 'vipAccess', visibleId: 'video-4', forwardId: 'video-4', reverseId: 'video-4-reverse', duration: 3, terminalHold: 0.08, reverseHold: 0.08 }
+      };
+
+      var headlineText = {
+        base: 'A real connection always feels inevitable.',
+        vibeCheck: 'Unlock a new world of dating.',
+        smartMatch: "Matched by something words can't explain.",
+        realConnections: 'A real connection always feels inevitable.',
+        vipAccess: 'Some desires are only for the invited.'
       };
 
       var state = {
@@ -908,8 +920,45 @@
         stage.classList.toggle('is-hovering', false);
       }
 
-      function setTitleHidden(hidden) {
-        stage.classList.toggle('title-hidden', !!hidden);
+      function renderHeadline(sceneKey) {
+        if (!headline) return;
+        var text = headlineText[sceneKey] || headlineText.base;
+        var words = text.split(/\s+/);
+        headline.textContent = '';
+        headline.setAttribute('aria-label', text);
+        words.forEach(function (word, index) {
+          var span = document.createElement('span');
+          span.textContent = word;
+          span.style.animationDelay = (index * 80) + 'ms';
+          headline.appendChild(span);
+          if (index < words.length - 1) {
+            headline.appendChild(document.createTextNode(' '));
+          }
+        });
+      }
+
+      function replayHeadline(isTransition) {
+        headlineTimers.forEach(function (timer) {
+          window.clearTimeout(timer);
+        });
+        headlineTimers = [];
+        if (!headline) return;
+
+        headline.classList.remove('headline-reveal', 'headline-exit');
+        void headline.offsetWidth;
+        if (!isTransition) {
+          headline.classList.add('headline-reveal');
+          return;
+        }
+
+        headline.classList.add('headline-exit');
+        headlineTimers.push(window.setTimeout(function () {
+          if (!state.scene) return;
+          renderHeadline(state.scene);
+          headline.classList.remove('headline-exit');
+          void headline.offsetWidth;
+          headline.classList.add('headline-reveal');
+        }, 7000));
       }
 
       function setupInitialBaseVideo() {
@@ -925,7 +974,8 @@
         state.playback = 'ready';
         state.scene = 'base';
         state.selectedScene = null;
-        setTitleHidden(false);
+        renderHeadline('base');
+        replayHeadline(false);
         updateControllerSelection(null);
         setNotice('A new era of connection is opening.');
       }
@@ -982,7 +1032,8 @@
         setControlDisabled(false);
         stage.classList.add('is-transitioning');
         stage.classList.remove('is-resetting', 'is-collapsing', 'is-selected', 'is-working');
-        setTitleHidden(sceneKey !== 'base');
+        state.scene = sceneKey;
+        replayHeadline(true);
         setNotice('Transitioning into ' + sceneMeta[sceneKey].label + '.');
         announce('Opening ' + sceneMeta[sceneKey].label + ' scene.');
         updateControllerSelection(sceneKey);
