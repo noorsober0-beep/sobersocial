@@ -13,8 +13,8 @@
       --retake-slow-ease: cubic-bezier(0.65, 0, 0.35, 1);
       --glass-x: 24%;
       --glass-y: 8%;
-      --cap-left: -5px;
-      --cap-width: calc(20% + 5px);
+      --cap-left: 0%;
+      --cap-width: 25%;
       --track-left: 0px;
       --track-width: 100%;
       --control-opacity: 1;
@@ -139,7 +139,7 @@
 
     .hero-copy {
       position: absolute;
-      top: calc(44.78% + 94px);
+      top: calc(44.78% + 120px);
       left: 50%;
       -webkit-transform: translateX(-50%);
       transform: translateX(-50%);
@@ -296,8 +296,8 @@
       z-index: 20;
       --glass-x: 24%;
       --glass-y: 8%;
-      --cap-left: -5px;
-      --cap-width: calc(20% + 5px);
+      --cap-left: 0%;
+      --cap-width: 25%;
       pointer-events: none;
     }
 
@@ -387,7 +387,7 @@
       position: absolute;
       inset: 0;
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       align-items: center;
       pointer-events: auto;
       z-index: 2;
@@ -890,8 +890,8 @@
       }
 
       function resetTrackPosition() {
-        capsule.style.setProperty('--cap-left', '-5px');
-        capsule.style.setProperty('--cap-width', 'calc(20% + 5px)');
+        capsule.style.setProperty('--cap-left', '0%');
+        capsule.style.setProperty('--cap-width', '25%');
       }
 
       function updateControllerSelection(targetScene) {
@@ -987,10 +987,10 @@
         announce('Opening ' + sceneMeta[sceneKey].label + ' scene.');
         updateControllerSelection(sceneKey);
         applyCapsulePosition(
-          sceneKey === 'vibeCheck' ? '20%' :
-          sceneKey === 'smartMatch' ? '40%' :
-          sceneKey === 'realConnections' ? '60%' : '80%',
-          '20%'
+          sceneKey === 'vibeCheck' ? '0%' :
+          sceneKey === 'smartMatch' ? '25%' :
+          sceneKey === 'realConnections' ? '50%' : '75%',
+          '25%'
         );
 
         if (currentVideo && currentVideo !== targetVideo) {
